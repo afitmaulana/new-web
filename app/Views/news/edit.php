@@ -1,20 +1,16 @@
-<?= $this->extend('layout/dashboard') ?>
-<?= $this->section('content') ?>
+<?= $this->extend('layouts/template'); ?>
+<?= $this->section('content'); ?>
 
-<h4>Edit Berita</h4>
-
-<form action="/dashboard/news/update/<?= $news['id'] ?>" method="post">
-    <?= csrf_field() ?>
-    <div class="mb-3">
+<form action="/dashboard/news/update/<?= $news['id']; ?>" method="post">
+    <div class="form-group">
         <label>Judul</label>
-        <input type="text" name="title" class="form-control" value="<?= esc($news['title']) ?>" required>
+        <input type="text" name="title" class="form-control" value="<?= esc($news['title']); ?>" required>
     </div>
-    <div class="mb-3">
+    <div class="form-group">
         <label>Isi Berita</label>
-        <textarea name="content" class="form-control" rows="5" required><?= esc($news['content']) ?></textarea>
+        <textarea name="content" class="form-control" rows="5" required><?= esc($news['content']); ?></textarea>
     </div>
-    <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Update</button>
-    <a href="/dashboard/news" class="btn btn-secondary">Kembali</a>
+    <button type="submit" class="btn btn-success">Update</button>
 </form>
 
-<?= $this->endSection() ?>
+<?= $this->endSection(); ?>

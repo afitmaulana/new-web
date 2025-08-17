@@ -1,24 +1,27 @@
-<?= $this->extend('layout/dashboard') ?>
-<?= $this->section('content') ?>
+<?= $this->extend('layout/template'); ?>
+<?= $this->section('content'); ?>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form action="/news/store" method="post" enctype="multipart/form-data">
+                <?= csrf_field(); ?>
+                <div class="mb-3">
+                    <label for="title" class="form-label">Judul Berita</label>
+                    <input type="text" class="form-control" id="title" name="title" required autofocus>
+                </div>
+                <div class="mb-3">
+                    <label for="content" class="form-label">Isi Berita</label>
+                    <textarea class="form-control" id="content" name="content" rows="10" required></textarea>
+                </div>
 
-<h4>Tambah Berita</h4>
+                <div class="mb-3">
+                    <label for="images" class="form-label">Upload Gambar (Bisa lebih dari satu)</label>
+                    <input class="form-control" type="file" id="images" name="images[]" multiple>
+                    <small class="form-text text-muted">Tipe file yang diizinkan: jpg, jpeg, png, gif.</small>
+                </div>
 
-<form action="/dashboard/news/store" method="post" enctype="multipart/form-data">
-    <?= csrf_field() ?>
-    <div class="mb-3">
-        <label>Judul</label>
-        <input type="text" name="title" class="form-control" required>
+                <button type="submit" class="btn btn-primary">Publikasikan</button>
+                <a href="/dashboard/news" class="btn btn-secondary">Batal</a>
+            </form>
+        </div>
     </div>
-    <div class="mb-3">
-        <label>Isi Berita</label>
-        <textarea name="content" class="form-control" rows="5" required></textarea>
-    </div>
-    <div class="mb-3">
-        <label>Upload Gambar (bisa lebih dari satu)</label>
-        <input type="file" name="images[]" class="form-control" multiple>
-    </div>
-    <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Simpan</button>
-    <a href="/dashboard/news" class="btn btn-secondary">Kembali</a>
-</form>
-
-<?= $this->endSection() ?>
+<?= $this->endSection(); ?>
