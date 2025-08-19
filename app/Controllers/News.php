@@ -4,116 +4,212 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\NewsModel;
-use App\Models\NewsImageModel; // 1. Tambahkan use statement untuk model gambar
+use App\Models\NewsImageModel;
+use CodeIgniter\Exceptions\PageNotFoundException;
 
 class News extends BaseController
 {
     protected $newsModel;
-    protected $newsImageModel; // 2. Deklarasikan properti untuk model gambar
+    protected $newsImageModel;
 
     public function __construct()
     {
         $this->newsModel = new NewsModel();
-        $this->newsImageModel = new NewsImageModel(); // 3. Inisialisasi model gambar
+        $this->newsImageModel = new NewsImageModel();
     }
 
+    /**
+     * Menampilkan daftar semua berita di dashboard.
+     */
     public function index()
     {
         $newsData = $this->newsModel->orderBy('created_at', 'DESC')->findAll();
 
-        // Ambil gambar untuk setiap berita
-        foreach ($newsData as $key => $news) {
-            $newsData[$key]['images'] = $this->newsImageModel
-                                             ->where('news_id', $news['id'])
-                                             ->findAll();
+        if (!empty($newsData)) {
+            foreach ($newsData as $key => $news) {
+                if (isset($news['id'])) {
+                    $newsData[$key]['images'] = $this->newsImageModel
+                        ->where('news_id', $news['id'])
+                        ->findAll();
+                } else {
+                    $newsData[$key]['images'] = [];
+                }
+            }
         }
 
         $data = [
             'title' => 'Manajemen Berita',
-            'news' => $newsData
+            'news'  => $newsData
         ];
+
         return view('news/index', $data);
     }
 
+    /**
+     * Menampilkan form untuk membuat berita baru.
+     */
     public function create()
     {
         $data = [
-            'title' => 'Tambah Berita'
+            'title' => 'Tambah Berita Baru'
         ];
         return view('news/create', $data);
     }
 
+    /**
+     * Menyimpan berita baru ke database.
+     */
     public function store()
     {
-        // 1. Simpan data berita utama terlebih dahulu
-        $this->newsModel->save([
+        $rules = [
+            'title'    => 'required|min_length[5]',
+            'content'  => 'required',
+            'images.*' => 'uploaded[images]|is_image[images]|mime_in[images,image/jpg,image/jpeg,image/png,image/gif]|max_size[images,2048]',
+        ];
+
+        if (!$this->validate($rules)) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+
+        $newsId = $this->newsModel->insert([
             'title'   => $this->request->getPost('title'),
             'content' => $this->request->getPost('content'),
         ]);
 
-        // Dapatkan ID dari berita yang baru saja disimpan
-        $newsId = $this->newsModel->getInsertID();
+        $imageFiles = $this->request->getFiles();
 
-        // 2. Proses upload gambar
-        $imageFiles = $this->request->getFileMultiple('images');
-
-        // Tambahkan pengecekan untuk memastikan ada file yang diupload
-        if (!empty($imageFiles)) {
-            foreach ($imageFiles as $file) {
-                // Cek lagi untuk memastikan file benar-benar valid
-                if ($file && $file->isValid() && !$file->hasMoved()) {
-                    // Buat nama file acak untuk menghindari duplikasi
+        if (isset($imageFiles['images'])) {
+            foreach ($imageFiles['images'] as $file) {
+                if ($file->isValid() && !$file->hasMoved()) {
                     $newFileName = $file->getRandomName();
-
-                    // Pindahkan file ke folder public/uploads/news
                     $file->move(FCPATH . 'uploads/news', $newFileName);
 
-                    // 3. Simpan informasi gambar ke database
-                    $this->newsImageModel->save([
-                        'news_id' => $newsId,
+                    $this->newsImageModel->insert([
+                        'news_id'        => $newsId,
                         'image_filename' => $newFileName,
-                        'uploaded_at' => date('Y-m-d H:i:s')
                     ]);
                 }
             }
         }
 
-        session()->setFlashdata('success', 'Berita baru dan gambar berhasil dipublikasikan!');
-        return redirect()->to('/dashboard/news');
+        return redirect()->to('/dashboard/news')->with('message', 'Berita baru berhasil dipublikasikan!');
     }
     
+    /**
+     * Menampilkan form untuk mengedit berita.
+     */
     public function edit($id)
     {
+        $newsData = $this->newsModel->find($id);
+
+        if (!$newsData) {
+            throw new PageNotFoundException('Berita dengan ID ' . $id . ' tidak ditemukan.');
+        }
+
+        $newsData['images'] = $this->newsImageModel->where('news_id', $id)->findAll();
+
         $data = [
             'title' => 'Edit Berita',
-            'news' => $this->newsModel->find($id)
+            'news'  => $newsData,
         ];
-
-        if (empty($data['news'])) {
-            throw new \CodeIgniter\Exceptions\PageNotFoundException('Berita tidak ditemukan.');
-        }
 
         return view('news/edit', $data);
     }
 
+    /**
+     * Memperbarui data berita di database.
+     */
     public function update($id)
     {
+        $rules = [
+            'title'    => 'required|min_length[5]',
+            'content'  => 'required',
+            'images.*' => 'is_image[images]|mime_in[images,image/jpg,image/jpeg,image/png,image/gif]|max_size[images,2048]',
+        ];
+
+        if (!$this->validate($rules)) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+
         $this->newsModel->update($id, [
-            'title' => $this->request->getPost('title'),
+            'title'   => $this->request->getPost('title'),
             'content' => $this->request->getPost('content'),
         ]);
 
-        // (Catatan: Logika untuk update gambar bisa ditambahkan di sini nanti)
+        $imagesToDelete = $this->request->getPost('delete_images');
+        if (!empty($imagesToDelete)) {
+            foreach ($imagesToDelete as $imageId) {
+                $image = $this->newsImageModel->find($imageId);
+                if ($image) {
+                    $filePath = FCPATH . 'uploads/news/' . $image['image_filename'];
+                    if (file_exists($filePath)) {
+                        unlink($filePath);
+                    }
+                    $this->newsImageModel->delete($imageId);
+                }
+            }
+        }
 
-        session()->setFlashdata('success', 'Berita berhasil diperbarui!');
-        return redirect()->to('/dashboard/news');
+        $imageFiles = $this->request->getFiles();
+        if (isset($imageFiles['images']) && $imageFiles['images'][0]->isValid()) {
+            foreach ($imageFiles['images'] as $file) {
+                if ($file->isValid() && !$file->hasMoved()) {
+                    $newName = $file->getRandomName();
+                    $file->move(FCPATH . 'uploads/news', $newName);
+                    $this->newsImageModel->insert([
+                        'news_id'        => $id,
+                        'image_filename' => $newName,
+                    ]);
+                }
+            }
+        }
+
+        return redirect()->to('/dashboard/news')->with('message', 'Berita berhasil diperbarui!');
     }
 
+    /**
+     * Menampilkan detail satu berita.
+     */
+    public function show($id)
+    {
+        $newsData = $this->newsModel->find($id);
+
+        if (!$newsData) {
+            throw new PageNotFoundException('Berita dengan ID ' . $id . ' tidak ditemukan.');
+        }
+
+        $newsData['images'] = $this->newsImageModel->where('news_id', $id)->findAll();
+
+        $data = [
+            'title' => $newsData['title'],
+            'news'  => $newsData,
+        ];
+
+        return view('news/show', $data);
+    }
+
+    /**
+     * Menghapus berita dan semua gambar terkait.
+     */
     public function delete($id)
     {
-        // (Catatan: Gambar akan terhapus otomatis karena 'ON DELETE CASCADE' di database)
+        $news = $this->newsModel->find($id);
+        if (!$news) {
+            return redirect()->to('/dashboard/news')->with('error', 'Berita tidak ditemukan.');
+        }
+
+        $images = $this->newsImageModel->where('news_id', $id)->findAll();
+        if (!empty($images)) {
+            foreach ($images as $image) {
+                $filePath = FCPATH . 'uploads/news/' . $image['image_filename'];
+                if (file_exists($filePath)) {
+                    unlink($filePath);
+                }
+            }
+        }
+        
         $this->newsModel->delete($id);
-        session()->setFlashdata('success', 'Berita berhasil dihapus!');
-        return redirect()->to('/dashboard/news');
+
+        return redirect()->to('/dashboard/news')->with('message', 'Berita berhasil dihapus!');
     }
 }

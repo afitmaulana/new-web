@@ -3,18 +3,23 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
-use App\Models\NewsModel; // Tambahkan ini
+use App\Models\NewsModel; // Panggil NewsModel
 
 class Dashboard extends BaseController
 {
     public function index()
     {
-        $newsModel = new NewsModel(); // Buat instance model
+        // Inisialisasi model
+        $newsModel = new NewsModel();
 
+        // Siapkan data untuk dikirim ke view
         $data = [
-            'title' => 'Dashboard',
-            'total_news' => $newsModel->countAllResults() // Hitung semua berita
+            'title'         => 'Dashboard',
+            'total_berita'  => $newsModel->countAllResults(), // Menghitung semua baris di tabel berita
+            'total_penduduk'=> 1250, // Angka statis, bisa diganti dengan model penduduk nanti
+            'layanan_surat' => 25,   // Angka statis, bisa diganti dengan model surat nanti
         ];
+
         return view('dashboard/index', $data);
     }
 }

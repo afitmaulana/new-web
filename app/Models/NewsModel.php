@@ -6,8 +6,11 @@ use CodeIgniter\Model;
 
 class NewsModel extends Model
 {
-    protected $table = 'news';
-    protected $primaryKey = 'id';
-    protected $allowedFields = ['title', 'content', 'created_at'];
-    protected $useTimestamps = true; // biar otomatis isi created_at & updated_at
+    protected $table            = 'news';
+    protected $primaryKey       = 'id';
+    // Tambahkan 'updated_at' ke dalam allowedFields
+    protected $allowedFields    = ['title', 'content', 'created_at', 'updated_at'];
+
+    // Pastikan ini bernilai true
+    protected $useTimestamps = true;
 }
