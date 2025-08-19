@@ -84,7 +84,27 @@
                 <a class="nav-link" href="#">
                     <i class="fas fa-fw fa-chart-bar"></i>
                     <span>Data Penduduk</span></a>
-            </li>
+            
+</li>
+<!-- Heading -->
+<div class="sidebar-heading">
+    Absensi
+</div>
+
+<!-- Nav Item - Laporan Absensi -->
+<li class="nav-item <?= (strpos(current_url(), 'attendance') !== false) ? 'active' : '' ?>">
+    <a class="nav-link" href="<?= base_url('/dashboard/attendance/log') ?>">
+        <i class="fas fa-fw fa-clipboard-list"></i>
+        <span>Laporan Absensi</span></a>
+</li>
+
+<!-- Nav Item - Manajemen Perangkat -->
+<li class="nav-item <?= (strpos(current_url(), 'officials') !== false) ? 'active' : '' ?>">
+    <a class="nav-link" href="<?= base_url('/dashboard/officials') ?>">
+        <i class="fas fa-fw fa-user-tie"></i>
+        <span>Perangkat Desa</span></a>
+</li>
+
             
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
@@ -93,6 +113,7 @@
             <div class="text-center d-none d-md-inline">
                 <button class="rounded-circle border-0" id="sidebarToggle"></button>
             </div>
+            
 
         </ul>
         <!-- End of Sidebar -->
