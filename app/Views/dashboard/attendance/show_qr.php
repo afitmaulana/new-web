@@ -6,23 +6,23 @@
         <h6 class="m-0 font-weight-bold text-primary"><?= esc($title) ?></h6>
     </div>
     <div class="card-body text-center">
-        <p>QR Code ini unik untuk setiap perangkat desa. Silakan cetak dan berikan kepada yang bersangkutan.</p>
-        <div id="qrcode" class="d-inline-block p-3 border rounded mb-3"></div>
+        <p>QR Code ini unik untuk setiap perangkat desa. Silakan cetak atau unduh.</p>
+        
+        <img src="<?= site_url('dashboard/officials/qr-image/' . $official['id']); ?>" 
+             alt="QR Code" 
+             class="img-fluid mb-3" 
+             style="max-width: 250px; border: 1px solid #ddd; padding: 5px;">
+        
         <h5><?= esc($official['name']) ?></h5>
         <p class="text-muted"><?= esc($official['position']) ?></p>
-        <button class="btn btn-success" onclick="window.print()"><i class="fas fa-print"></i> Cetak</button>
-        <a href="<?= base_url('/dashboard/officials') ?>" class="btn btn-secondary">Kembali</a>
+
+        <div class="mt-4">
+            <a href="<?= site_url('dashboard/officials/qr-download/' . $official['id']); ?>" class="btn btn-success">
+                <i class="fas fa-download"></i> Download
+            </a>
+            <button class="btn btn-info" onclick="window.print()"><i class="fas fa-print"></i> Cetak</button>
+            <a href="<?= base_url('/dashboard/officials') ?>" class="btn btn-secondary">Kembali</a>
+        </div>
     </div>
 </div>
-
-<script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        new QRCode(document.getElementById("qrcode"), {
-            text: '<?= $qrData ?>',
-            width: 256,
-            height: 256,
-        });
-    });
-</script>
 <?= $this->endSection() ?>

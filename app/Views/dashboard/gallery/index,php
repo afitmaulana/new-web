@@ -1,0 +1,175 @@
+<?= $this->extend('layout/dashboard_layout') ?>
+
+<?= $this->section('content') ?>
+
+<!-- Tambahan CSS untuk efek visual -->
+<style>
+    .gallery-card {
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    }
+    .gallery-card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    }
+    .gallery-img {
+        cursor: pointer;
+        height: 180px;
+        object-fit: cover;
+    }
+    #imagePreview {
+        width: 100%;
+        height: 200px;
+        border: 1px dashed #ccc;
+        background-color: #f8f9fa;
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #6c757d;
+        font-style: italic;
+    }
+</style>
+
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800"><?= esc($title) ?></h1>
+    <button class="btn btn-primary btn-sm shadow-sm" data-toggle="modal" data-target="#addModal">
+        <i class="fas fa-plus fa-sm"></i> Tambah Gambar Baru
+    </button>
+</div>
+
+<!-- Menampilkan Pesan Notifikasi -->
+<?php if(session()->getFlashdata('success')): ?>
+    <div class="alert alert-success" role="alert"><?= session()->getFlashdata('success') ?></div>
+<?php endif; ?>
+<?php if(session()->getFlashdata('error')): ?>
+    <div class="alert alert-danger" role="alert"><?= session()->getFlashdata('error') ?></div>
+<?php endif; ?>
+
+<div class="row">
+    <?php if (!empty($gallery)): ?>
+        <?php foreach ($gallery as $item): ?>
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            <div class="card h-100 shadow-sm gallery-card">
+                <img src="/uploads/gallery/<?= esc($item['image']) ?>" 
+                     class="card-img-top gallery-img" 
+                     alt="<?= esc($item['title']) ?>"
+                     data-toggle="modal" 
+                     data-target="#viewImageModal" 
+                     data-src="/uploads/gallery/<?= esc($item['image']) ?>"
+                     data-title="<?= esc($item['title']) ?>">
+                <div class="card-body d-flex flex-column">
+                    <h6 class="card-title font-weight-bold text-primary flex-grow-1"><?= esc($item['title']) ?></h6>
+                    <p class="card-text small text-muted"><?= esc($item['caption']) ?></p>
+                </div>
+                <div class="card-footer d-flex justify-content-between align-items-center bg-white border-0 pt-0">
+                    <small class="text-muted">
+                        <i class="fas fa-clock fa-sm"></i> 
+                        <?= \CodeIgniter\I18n\Time::parse($item['uploaded_at'])->toLocalizedString('d MMM yyyy') ?>
+                    </small>
+                    <form action="<?= base_url('/dashboard/gallery/delete/' . $item['id']) ?>" method="post" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus gambar ini?');">
+                        <?= csrf_field() ?>
+                        <button type="submit" class="btn btn-danger btn-circle btn-sm" title="Hapus">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <div class="col-12">
+            <div class="text-center py-5">
+                <i class="fas fa-images fa-3x text-gray-400 mb-3"></i>
+                <p>Belum ada gambar di galeri.</p>
+                <button class="btn btn-primary" data-toggle="modal" data-target="#addModal">Mulai Tambahkan Gambar</button>
+            </div>
+        </div>
+    <?php endif; ?>
+</div>
+
+<!-- Modal Tambah Gambar -->
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Tambah Gambar Baru</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <form action="<?= base_url('/dashboard/gallery/store') ?>" method="post" enctype="multipart/form-data">
+                <?= csrf_field() ?>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="title">Judul Gambar</label>
+                        <input type="text" name="title" id="title" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="caption">Keterangan (Opsional)</label>
+                        <textarea name="caption" id="caption" class="form-control" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="image">Pilih File Gambar (Max: 2MB)</label>
+                        <div id="imagePreview">
+                            <span>Pratinjau Gambar</span>
+                        </div>
+                        <input type="file" name="image" id="imageUpload" class="form-control-file mt-2" accept="image/png, image/jpeg, image/jpg" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Lihat Gambar (Lightbox) -->
+<div class="modal fade" id="viewImageModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="imageModalTitle">Judul Gambar</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body text-center">
+                <img src="" id="modalImage" class="img-fluid rounded">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // Logika untuk Lightbox Viewer
+    $('#viewImageModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Tombol/gambar yang di-klik
+        var imgSrc = button.data('src');
+        var imgTitle = button.data('title');
+        
+        var modal = $(this);
+        modal.find('.modal-title').text(imgTitle);
+        modal.find('#modalImage').attr('src', imgSrc);
+    });
+
+    // Logika untuk Pratinjau Gambar saat Upload
+    const imageUpload = document.getElementById('imageUpload');
+    const imagePreview = document.getElementById('imagePreview');
+    
+    imageUpload.addEventListener('change', function () {
+        const file = this.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                imagePreview.style.backgroundImage = `url(${e.target.result})`;
+                imagePreview.innerHTML = ''; // Hapus teks pratinjau
+            };
+            reader.readAsDataURL(file);
+        } else {
+            imagePreview.style.backgroundImage = 'none';
+            imagePreview.innerHTML = '<span>Pratinjau Gambar</span>';
+        }
+    });
+});
+</script>
+<?= $this->endSection() ?>

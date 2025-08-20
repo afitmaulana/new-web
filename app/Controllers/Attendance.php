@@ -6,6 +6,11 @@ use App\Controllers\BaseController;
 use App\Models\OfficialModel;
 use App\Models\AttendanceRecordModel;
 use CodeIgniter\I18n\Time;
+use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
+use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
+use Endroid\QrCode\Writer\PngWriter;
 
 class Attendance extends BaseController
 {
@@ -18,8 +23,6 @@ class Attendance extends BaseController
         $this->attendanceModel = new AttendanceRecordModel();
     }
 
-    // --- Manajemen Perangkat Desa ---
-
     public function officials()
     {
         $data = [
@@ -31,31 +34,19 @@ class Attendance extends BaseController
 
     public function createOfficial()
     {
-        $data = [
-            'title' => 'Tambah Perangkat Desa',
-        ];
+        $data = ['title' => 'Tambah Perangkat Desa'];
         return view('dashboard/attendance/officials_form', $data);
     }
 
     public function storeOfficial()
     {
-        $rules = [
-            'name'     => 'required|min_length[3]',
-            'position' => 'required',
-            'address'  => 'required',
-        ];
-
-        if (!$this->validate($rules)) {
-            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
-        }
-
+        $qrCodeValue = uniqid('official_', true);
         $this->officialModel->save([
             'name'        => $this->request->getPost('name'),
             'position'    => $this->request->getPost('position'),
             'address'     => $this->request->getPost('address'),
-            'unique_code' => uniqid('desa_'), // Generate kode unik untuk QR
+            'qr_code'     => $qrCodeValue,
         ]);
-
         return redirect()->to('/dashboard/officials')->with('message', 'Data perangkat desa berhasil ditambahkan.');
     }
     
@@ -65,81 +56,59 @@ class Attendance extends BaseController
         if (!$official) {
             return redirect()->back()->with('error', 'Data tidak ditemukan.');
         }
-
-        $qrData = json_encode([
-            'code' => $official['unique_code'],
-            'name' => $official['name'],
-            'position' => $official['position']
-        ]);
-
         $data = [
             'title'    => 'QR Code untuk ' . $official['name'],
             'official' => $official,
-            'qrData'   => $qrData
         ];
-
         return view('dashboard/attendance/show_qr', $data);
     }
 
-    // --- Logika Absensi ---
-
-    public function record()
+    public function generateQrImage($id)
     {
-        if ($this->request->getMethod() !== 'post') {
-            return $this->response->setStatusCode(405);
+        $official = $this->officialModel->find($id);
+        if (!$official || empty($official['qr_code'])) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound('Data QR code tidak ditemukan.');
         }
 
-        $qrData = $this->request->getJsonVar('qrData');
-        if (!isset($qrData->code)) {
-            return $this->response->setJSON(['success' => false, 'message' => 'QR Code tidak valid.']);
-        }
+        $result = Builder::create()
+            ->writer(new PngWriter())
+            ->data($official['qr_code'])
+            ->encoding(new Encoding('UTF-8'))
+            ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
+            ->size(300)->margin(10)
+            ->roundBlockSizeMode(new RoundBlockSizeModeMargin())->build();
 
-        $official = $this->officialModel->where('unique_code', $qrData->code)->first();
-        if (!$official) {
-            return $this->response->setJSON(['success' => false, 'message' => 'Perangkat Desa tidak terdaftar.']);
-        }
-
-        $today = Time::now('Asia/Jakarta')->toDateString();
-        $currentTime = Time::now('Asia/Jakarta')->toTimeString();
-
-        $record = $this->attendanceModel
-            ->where('official_id', $official['id'])
-            ->where('attendance_date', $today)
-            ->first();
-
-        if (!$record) {
-            // Absen Masuk
-            $this->attendanceModel->insert([
-                'official_id'     => $official['id'],
-                'attendance_date' => $today,
-                'check_in'        => $currentTime,
-            ]);
-            return $this->response->setJSON(['success' => true, 'message' => 'Absen MASUK berhasil: ' . $official['name'] . ' pada jam ' . $currentTime]);
-        }
-        
-        if ($record['check_in'] && !$record['check_out']) {
-            // Absen Keluar
-            $this->attendanceModel->update($record['id'], ['check_out' => $currentTime]);
-            return $this->response->setJSON(['success' => true, 'message' => 'Absen KELUAR berhasil: ' . $official['name'] . ' pada jam ' . $currentTime]);
-        }
-
-        return $this->response->setJSON(['success' => false, 'message' => $official['name'] . ' sudah melakukan absen masuk dan keluar hari ini.']);
+        return $this->response->setHeader('Content-Type', $result->getMimeType())->setBody($result->getString());
     }
 
+    public function downloadQR($id)
+    {
+        $official = $this->officialModel->find($id);
+        if (!$official || empty($official['qr_code'])) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+        $safeName = url_title($official['name'], '-', true);
+        $filename = 'qr-code-' . $safeName . '.png';
+        $result = Builder::create()
+            ->writer(new PngWriter())
+            ->data($official['qr_code'])
+            ->encoding(new Encoding('UTF-8'))
+            ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
+            ->size(600)->margin(20)
+            ->roundBlockSizeMode(new RoundBlockSizeModeMargin())->build();
+        return $this->response->download($filename, $result->getString());
+    }
+    
     public function log()
     {
         $records = $this->attendanceModel
             ->select('attendance_records.*, officials.name, officials.position')
             ->join('officials', 'officials.id = attendance_records.official_id')
-            ->orderBy('attendance_date', 'DESC')
-            ->orderBy('check_in', 'DESC')
-            ->findAll();
-
+            ->orderBy('attendance_date', 'DESC')->orderBy('check_in', 'DESC')->findAll();
         $data = [
             'title'   => 'Laporan Absensi',
             'records' => $records,
         ];
-
         return view('dashboard/attendance/log', $data);
     }
 }

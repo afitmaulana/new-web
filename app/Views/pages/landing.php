@@ -186,7 +186,9 @@
                             <div class="card-footer bg-white border-0">
                                 <small class="text-muted">
                                     <i class="fas fa-clock fa-sm"></i>
-                                    <?= \CodeIgniter\I18n\Time::parse($item['created_at'])->toLocalizedString('d MMMM yyyy') ?>
+                                    <?php if (!empty($item['created_at'])) : ?>
+    <?= \CodeIgniter\I18n\Time::parse($item['created_at'])->toLocalizedString('d MMMM yyyy') ?>
+<?php endif; ?>
                                 </small>
                             </div>
                         </div>
