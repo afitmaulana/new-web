@@ -17,7 +17,8 @@
                 </div>
             <?php endif ?>
 
-            <form action="<?= base_url('news/update/' . $news['id']) ?>" method="post" enctype="multipart/form-data">
+            <!-- ✅ FORM ACTION DIPERBAIKI -->
+            <form action="<?= base_url('dashboard/news/update/' . $news['id']) ?>" method="post" enctype="multipart/form-data">
                 <?= csrf_field() ?>
 
                 <div class="mb-3">

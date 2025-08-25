@@ -63,10 +63,10 @@
           </div>
           <div id="previewParent">
             <h5 id="searching" class="text-muted">Mencari kamera...</h5>
-            <video id="previewKamera" autoplay playsinline></video>
-          </div>
-          <div id="hasilScan" class="mt-3"></div>
-        </div>
+            <!-- ganti video: tambahkan muted agar autoplay jalan di mobile -->
+<video id="previewKamera" autoplay playsinline muted style="width:100%;max-height:300px;border-radius:.5rem;display:none;"></video>
+<div id="scannerError" class="text-danger small mt-2"></div>
+
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
         </div>
@@ -80,84 +80,173 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
   <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    let selectedDeviceId = null;
-    let audio = new Audio("<?= base_url('assets/audio/beep.mp3'); ?>");
-    const codeReader = new ZXing.BrowserMultiFormatReader();
-    const sourceSelect = $('#pilihKamera');
+document.addEventListener('DOMContentLoaded', function() {
+  let selectedDeviceId = null;
+  let controls = null;               // handle untuk stop kamera
+  let lastText = null;               // anti duplikat
+  let lastScanAt = 0;                // mencegah spam
+  const SCAN_COOLDOWN = 2000;        // 2 detik
+  const audio = new Audio("<?= base_url('assets/audio/beep.mp3'); ?>");
 
-    function initScanner() {
-      codeReader.listVideoInputDevices().then(videoInputDevices => {
-        if (videoInputDevices.length < 1) {
-          alert("Kamera tidak ditemukan!");
-          return;
-        }
+  // ZXing
+  const codeReader = new ZXing.BrowserMultiFormatReader();
+  const $cameraSelect = $('#pilihKamera');
 
-        // set default kamera
-        if (!selectedDeviceId) {
-          selectedDeviceId = videoInputDevices[0].deviceId;
-        }
+  // CSRF (ambil dari meta)
+  const csrfName = document.querySelector('meta[name="csrf-token-name"]').getAttribute('content');
+  function getCsrfToken(){ return document.querySelector('meta[name="csrf-token-value"]').getAttribute('content'); }
+  function setCsrfToken(v){ document.querySelector('meta[name="csrf-token-value"]').setAttribute('content', v); }
 
-        // isi dropdown
-        sourceSelect.html('');
-        videoInputDevices.forEach(device => {
-          const option = $('<option>').val(device.deviceId).text(device.label || 'Camera');
-          if (device.deviceId === selectedDeviceId) option.attr('selected', true);
-          sourceSelect.append(option);
-        });
-
-        $('#searching').hide();
-        $('#previewKamera').show();
-
-        codeReader.decodeOnceFromVideoDevice(selectedDeviceId, 'previewKamera').then(result => {
-          console.log(result.text);
-          cekData(result.text);
-
-          $('#previewKamera').hide();
-          $('#searching').show();
-
-          codeReader.reset();
-
-          setTimeout(() => {
-            initScanner();
-          }, 2500);
-
-        }).catch(err => console.error(err));
-      }).catch(err => console.error(err));
+  // Helper: pilih kamera belakang bila ada
+  function pickBestDevice(devices){
+    // default: pertama
+    let best = devices[0];
+    // cari yang mengandung back/rear
+    for (const d of devices){
+      const label = (d.label || '').toLowerCase();
+      if (label.includes('back') || label.includes('rear')) return d;
     }
+    return best;
+  }
 
-    // pilih kamera manual
-    sourceSelect.on('change', function() {
-      selectedDeviceId = $(this).val();
-      if (codeReader) {
-        codeReader.reset();
-        initScanner();
+  async function startScanner(){
+    $('#scannerError').text('');
+    $('#searching').show();
+    $('#previewKamera').hide();
+
+    try{
+      const devices = await codeReader.listVideoInputDevices();
+      if (!devices || devices.length === 0){
+        $('#scannerError').text('Kamera tidak ditemukan. Pastikan browser mendapat izin kamera.');
+        return;
       }
-    });
 
-    // ajax cek data
-    function cekData(code) {
-      $.post("<?= base_url('scan/cek'); ?>", {
-        unique_code: code,
-        waktu: 'masuk' // bisa diubah sesuai logika server
-      }, function(response) {
-        audio.play();
-        $('#hasilScan').html(response);
-        $('html, body').animate({ scrollTop: $("#hasilScan").offset().top }, 500);
-      }).fail(function(xhr) {
-        $('#hasilScan').html("<div class='alert alert-danger'>Terjadi kesalahan</div>");
+      if (!selectedDeviceId){
+        selectedDeviceId = pickBestDevice(devices).deviceId;
+      }
+
+      // isi dropdown
+      $cameraSelect.html('');
+      devices.forEach(d => {
+        const opt = $('<option>').val(d.deviceId).text(d.label || 'Kamera');
+        if (d.deviceId === selectedDeviceId) opt.attr('selected', true);
+        $cameraSelect.append(opt);
       });
-    }
 
-    // kontrol saat modal dibuka/ditutup
-    $('#scanModal').on('shown.bs.modal', function () {
-      initScanner();
-    }).on('hidden.bs.modal', function () {
-      if (codeReader) codeReader.reset();
-      $('#hasilScan').html('');
-    });
+      // mulai decode stream (loop callback)
+      $('#searching').hide();
+      $('#previewKamera').show();
+      lastText = null; // reset anti duplikat saat mulai
+
+      controls = await codeReader.decodeFromVideoDevice(selectedDeviceId, 'previewKamera', (result, err, controlsRef) => {
+        if (result){
+          const now = Date.now();
+          const text = result.text;
+
+          // skip duplikat dalam cooldown
+          if (text === lastText && (now - lastScanAt) < SCAN_COOLDOWN) return;
+
+          lastText = text;
+          lastScanAt = now;
+          handleScan(text);
+        }else if (err && !(err instanceof ZXing.NotFoundException)){
+          // error selain NotFound, tampilkan sekali
+          console.warn(err);
+          $('#scannerError').text('Terjadi masalah saat membaca kamera: ' + err);
+        }
+      });
+
+    }catch(e){
+      console.error(e);
+      $('#scannerError').text('Gagal mengakses kamera: ' + e);
+    }
+  }
+
+  function stopScanner(){
+    try{
+      if (controls && typeof controls.stop === 'function'){
+        controls.stop();
+      }else{
+        codeReader.reset();
+      }
+    }catch(e){
+      console.warn('stopScanner:', e);
+    }
+    controls = null;
+  }
+
+  // Ganti kamera manual
+  $cameraSelect.on('change', function(){
+    selectedDeviceId = $(this).val();
+    stopScanner();
+    startScanner();
   });
-  </script>
+
+  // Kirim ke server: /scan/process (sesuai rute yang sudah ada)
+  async function handleScan(codeText){
+    // bunyikan beep dulu
+    try { audio.currentTime = 0; audio.play(); } catch(e){}
+
+    // tampilkan cepat ke UI
+    $('#hasilScan').html(
+      "<div class='alert alert-info'>Mendeteksi kode: <strong>" + $('<div>').text(codeText).html() + "</strong> ... memverifikasi</div>"
+    );
+
+    // siapkan form data (form-encoded)
+    const form = new URLSearchParams();
+    form.append('unique_code', codeText);
+    form.append('waktu', 'masuk'); // sesuaikan jika logic server butuh "keluar"
+    form.append(csrfName, getCsrfToken());
+
+    try{
+      const resp = await fetch("<?= base_url('scan/process'); ?>", {
+        method: 'POST',
+        headers: { 'Accept': 'application/json, text/html, */*' },
+        body: form
+      });
+
+      // update CSRF dari header jika ada
+      const newToken = resp.headers.get('X-CSRF-Token');
+      if (newToken) setCsrfToken(newToken);
+
+      const contentType = resp.headers.get('Content-Type') || '';
+      if (contentType.includes('application/json')){
+        const data = await resp.json();
+        if (data.csrfToken) setCsrfToken(data.csrfToken); // jika server kirim di JSON
+        if (data.html){
+          $('#hasilScan').html(data.html);
+        }else{
+          $('#hasilScan').html(
+            "<div class='alert alert-" + (data.status === 'ok' ? "success" : "danger") + "'>" +
+            (data.message || 'Berhasil diproses') + "</div>"
+          );
+        }
+      }else{
+        // fallback: server kirim HTML langsung
+        const html = await resp.text();
+        $('#hasilScan').html(html);
+      }
+
+      // scroll ke hasil
+      $('html, body').animate({ scrollTop: $("#hasilScan").offset().top }, 400);
+
+    }catch(err){
+      console.error(err);
+      $('#hasilScan').html("<div class='alert alert-danger'>Gagal mengirim data ke server.</div>");
+    }
+  }
+
+  // kontrol modal
+  $('#scanModal')
+    .on('shown.bs.modal', function () { startScanner(); })
+    .on('hidden.bs.modal', function () {
+      stopScanner();
+      $('#hasilScan').html('');
+      $('#searching').show();
+      $('#previewKamera').hide();
+    });
+});
+</script>
 
 </body>
 </html>

@@ -8,7 +8,5 @@ class OfficialModel extends Model
 {
     protected $table = 'officials';
     protected $primaryKey = 'id';
-    
-    // PASTIKAN 'qr_code' ADA DI DALAM DAFTAR INI
-    protected $allowedFields = ['name', 'address', 'position', 'qr_code', 'created_at', 'updated_at'];
+    protected $allowedFields = ['name', 'position'];
 }

@@ -83,7 +83,7 @@ class Database extends Config
     //        'hostname'   => 'localhost',
     //        'username'   => 'root',
     //        'password'   => 'root',
-    //        'database'   => 'ci4',
+    //        'database'   => '',
     //        'schema'     => 'public',
     //        'DBDriver'   => 'Postgre',
     //        'DBPrefix'   => '',

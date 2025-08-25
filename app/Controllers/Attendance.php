@@ -2,17 +2,16 @@
 
 namespace App\Controllers;
 
-use App\Controllers\BaseController;
 use App\Models\OfficialModel;
 use App\Models\AttendanceRecordModel;
-use CodeIgniter\I18n\Time;
-use Endroid\QrCode\Builder\Builder;
-use Endroid\QrCode\Encoding\Encoding;
-use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
-use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
-use Endroid\QrCode\Writer\PngWriter;
+use CodeIgniter\Controller;
 
-class Attendance extends BaseController
+// ✅ Import versi v4
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
+
+
+class Attendance extends Controller
 {
     protected $officialModel;
     protected $attendanceModel;
@@ -23,92 +22,117 @@ class Attendance extends BaseController
         $this->attendanceModel = new AttendanceRecordModel();
     }
 
+    // ===========================
+    // DAFTAR APARATUR
+    // ===========================
     public function officials()
     {
-        $data = [
-            'title'     => 'Manajemen Perangkat Desa',
-            'officials' => $this->officialModel->findAll(),
-        ];
-        return view('dashboard/attendance/officials_index', $data);
-    }
-
-    public function createOfficial()
-    {
-        $data = ['title' => 'Tambah Perangkat Desa'];
-        return view('dashboard/attendance/officials_form', $data);
-    }
-
-    public function storeOfficial()
-    {
-        $qrCodeValue = uniqid('official_', true);
-        $this->officialModel->save([
-            'name'        => $this->request->getPost('name'),
-            'position'    => $this->request->getPost('position'),
-            'address'     => $this->request->getPost('address'),
-            'qr_code'     => $qrCodeValue,
+        $officials = $this->officialModel->findAll();
+        return view('attendance/officials_list', [
+            'officials' => $officials,
+            'title' => 'Daftar Aparatur'
         ]);
-        return redirect()->to('/dashboard/officials')->with('message', 'Data perangkat desa berhasil ditambahkan.');
     }
-    
-    public function showQR($id)
+
+    // Form tambah aparatur
+    public function addOfficial()
+    {
+        return view('attendance/add_official', [
+            'title' => 'Tambah Aparatur'
+        ]);
+    }
+
+    // Simpan data aparatur baru
+    public function saveOfficial()
+    {
+        $data = [
+            'name' => $this->request->getPost('name'),
+            'position' => $this->request->getPost('position')
+        ];
+
+        if (empty($data['name']) || empty($data['position'])) {
+            return redirect()->back()->with('error', 'Nama dan Jabatan wajib diisi')->withInput();
+        }
+
+        $this->officialModel->save($data);
+        return redirect()->to(site_url('dashboard/officials'))->with('success', 'Aparatur berhasil ditambahkan');
+    }
+
+    // ===========================
+    // QR CODE
+    // ===========================
+    public function qrView($id)
     {
         $official = $this->officialModel->find($id);
         if (!$official) {
-            return redirect()->back()->with('error', 'Data tidak ditemukan.');
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('Official not found');
         }
-        $data = [
-            'title'    => 'QR Code untuk ' . $official['name'],
+
+        return view('attendance/qr_view', [
             'official' => $official,
-        ];
-        return view('dashboard/attendance/show_qr', $data);
+            'title' => 'QR Code Absensi'
+        ]);
     }
 
-    public function generateQrImage($id)
+   public function qrImage($id)
     {
         $official = $this->officialModel->find($id);
-        if (!$official || empty($official['qr_code'])) {
-            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound('Data QR code tidak ditemukan.');
+        if (!$official) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('Official not found');
         }
 
-        $result = Builder::create()
-            ->writer(new PngWriter())
-            ->data($official['qr_code'])
-            ->encoding(new Encoding('UTF-8'))
-            ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
-            ->size(300)->margin(10)
-            ->roundBlockSizeMode(new RoundBlockSizeModeMargin())->build();
+        $qrData = site_url('dashboard/attendance/checkin?official_id=' . $official['id']);
 
-        return $this->response->setHeader('Content-Type', $result->getMimeType())->setBody($result->getString());
+        // ✅ cara benar di v4
+        $qrCode = new QrCode($qrData);
+        $qrCode->setSize(300);
+        $qrCode->setMargin(10);
+        $qrCode->setEncoding('UTF-8');
+        $qrCode->setErrorCorrectionLevel(new ErrorCorrectionLevelHigh());
+
+        // Output langsung ke browser
+        header('Content-Type: ' . $qrCode->getContentType());
+        echo $qrCode->writeString();
+        exit;
     }
 
-    public function downloadQR($id)
+    // ===========================
+    // ABSENSI
+    // ===========================
+    public function scan()
     {
-        $official = $this->officialModel->find($id);
-        if (!$official || empty($official['qr_code'])) {
-            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        return view('attendance/scan', ['title' => 'Scan Absensi']);
+    }
+
+    public function checkIn()
+    {
+        $officialId = $this->request->getGet('official_id');
+        $official = $this->officialModel->find($officialId);
+
+        if (!$official) {
+            return redirect()->back()->with('error', 'Aparatur tidak ditemukan.');
         }
-        $safeName = url_title($official['name'], '-', true);
-        $filename = 'qr-code-' . $safeName . '.png';
-        $result = Builder::create()
-            ->writer(new PngWriter())
-            ->data($official['qr_code'])
-            ->encoding(new Encoding('UTF-8'))
-            ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
-            ->size(600)->margin(20)
-            ->roundBlockSizeMode(new RoundBlockSizeModeMargin())->build();
-        return $this->response->download($filename, $result->getString());
+
+        $this->attendanceModel->save([
+            'official_id' => $officialId,
+            'checkin_time' => date('Y-m-d H:i:s')
+        ]);
+
+        return redirect()->to(site_url('dashboard/attendance/success?official_id=' . $officialId));
     }
-    
-    public function log()
+
+    public function success()
     {
-        $records = $this->attendanceModel
-            ->select('attendance_records.*, officials.name, officials.position')
-            ->join('officials', 'officials.id = attendance_records.official_id')
-            ->orderBy('attendance_date', 'DESC')->orderBy('check_in', 'DESC')->findAll();
-        $data = [
-            'title'   => 'Laporan Absensi',
-            'records' => $records,
-        ];
-        return view('dashboard/attendance/log', $data);
+        $officialId = $this->request->getGet('official_id');
+        $official = $this->officialModel->find($officialId);
+
+        if (!$official) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('Official not found');
+        }
+
+        return view('attendance/success', [
+            'official' => $official,
+            'title' => 'Absensi Berhasil'
+        ]);
     }
 }

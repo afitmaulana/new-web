@@ -1,358 +1,1091 @@
 <!doctype html>
 <html lang="id">
-
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><?= esc($title ?? 'Selamat Datang'); ?> | Website Desa Kaliboja</title>
-    <link rel="icon" href="/img/logo.png" type="image/png">
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f8f9fa;
-        }
-
-        .navbar-brand img {
-            max-height: 40px;
-        }
-
-        .hero-section {
-            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1599056976487-73a69a163a0a?q=80&w=2070&auto=format&fit=crop') no-repeat center center;
-            background-size: cover;
-            color: white;
-            padding: 10rem 0;
-            text-align: center;
-        }
-
-        .hero-section h1 {
-            font-weight: 700;
-            font-size: 3.5rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-        }
-
-        .section-title {
-            font-weight: 700;
-            color: #343a40;
-            position: relative;
-            padding-bottom: 15px;
-        }
-
-        .section-title::after {
-            content: '';
-            position: absolute;
-            display: block;
-            width: 60px;
-            height: 4px;
-            background: #4e73df;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-
-        .stat-card {
-            background-color: white;
-            border-radius: 0.75rem;
-            padding: 2rem;
-            text-align: center;
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.08);
-        }
-
-        .stat-card .icon {
-            font-size: 3rem;
-            color: #4e73df;
-        }
-
-        .news-card {
-            border: none;
-            border-radius: 0.75rem;
-            overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .news-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.1);
-        }
-
-        .news-card-img {
-            height: 200px;
-            object-fit: cover;
-        }
-
-        .official-card {
-            text-align: center;
-        }
-
-        .official-card img {
-            width: 120px;
-            height: 120px;
-            object-fit: cover;
-            border: 4px solid #4e73df;
-        }
-
-        .potential-card {
-            background: white;
-            border-radius: 0.75rem;
-            padding: 2rem;
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05);
-            text-align: center;
-            height: 100%;
-        }
-
-        .potential-card .icon {
-            font-size: 2.5rem;
-            color: #4e73df;
-        }
-
-        .footer {
-            background-color: #343a40;
-            color: #adb5bd;
-        }
-
-        .footer a {
-            color: #adb5bd;
-            text-decoration: none;
-        }
-
-        .footer a:hover {
-            color: white;
-        }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><?= esc($title ?? 'Desa Kaliboja'); ?> | Website Resmi</title>
+  <meta name="description" content="Website resmi Desa Kaliboja - Portal digital untuk transparansi informasi, promosi potensi, dan pelayanan digital kepada masyarakat.">
+  <link rel="icon" href="/img/logo.png" type="image/png">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4A6C6F;
+      --primary-dark: #3a5659;
+      --secondary: #F4EAD5;
+      --accent: #D6A25B;
+      --accent-light: #e6b877;
+      --dark: #1f2937;
+      --light: #F9F7F3;
+      --success: #28a745;
+      --text-dark: #333;
+      --text-light: #6c757d;
+      --shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+      --shadow-hover: 0 10px 25px rgba(0, 0, 0, 0.15);
+    }
+    
+    body {
+      background: var(--light);
+      color: var(--text-dark);
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Ubuntu, 'Helvetica Neue', Arial, sans-serif;
+      line-height: 1.6;
+      scroll-behavior: smooth;
+    }
+    
+    h1, h2, h3, h4, h5, h6, .navbar-brand {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+    }
+    
+    .navbar {
+      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+      padding: 0.8rem 0;
+      transition: all 0.3s ease;
+    }
+    
+    .navbar.scrolled {
+      padding: 0.5rem 0;
+      background: rgba(255, 255, 255, 0.95) !important;
+      backdrop-filter: blur(10px);
+    }
+    
+    .navbar-brand img {
+      height: 40px;
+      transition: all 0.3s ease;
+    }
+    
+    .navbar.scrolled .navbar-brand img {
+      height: 36px;
+    }
+    
+    .nav-link {
+      font-weight: 500;
+      position: relative;
+      padding: 0.5rem 0.8rem !important;
+      margin: 0 0.2rem;
+      transition: all 0.3s ease;
+    }
+    
+    .nav-link::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      width: 0;
+      height: 2px;
+      background: var(--accent);
+      transition: all 0.3s ease;
+      transform: translateX(-50%);
+    }
+    
+    .nav-link:hover::before, .nav-link.active::before {
+      width: 70%;
+    }
+    
+    .btn-primary {
+      background: var(--primary);
+      border-color: var(--primary);
+      padding: 0.6rem 1.5rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+      background: var(--primary-dark);
+      border-color: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-hover);
+    }
+    
+    .btn-outline-primary {
+      color: var(--primary);
+      border-color: var(--primary);
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-outline-primary:hover {
+      background: var(--primary);
+      border-color: var(--primary);
+      transform: translateY(-2px);
+    }
+    
+    .btn-success {
+      background: var(--success);
+      border-color: var(--success);
+      transition: all 0.3s ease;
+    }
+    
+    .btn-success:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-hover);
+    }
+    
+    .section-title {
+      font-weight: 700;
+      color: var(--primary);
+      text-align: center;
+      margin-bottom: 2.4rem;
+      position: relative;
+    }
+    
+    .section-title::after {
+      content: '';
+      display: block;
+      width: 84px;
+      height: 4px;
+      background: var(--accent);
+      margin: 0.8rem auto 0;
+      border-radius: 2px;
+    }
+    
+    .hero .carousel-item {
+      height: 100vh;
+      min-height: 600px;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      position: relative;
+    }
+    
+    .hero .carousel-item::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.55));
+    }
+    
+    .hero .carousel-caption {
+      z-index: 2;
+      bottom: 30%;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    }
+    
+    .hero h1 {
+      font-size: 3.5rem;
+      margin-bottom: 1.5rem;
+      animation: fadeInDown 1s ease;
+    }
+    
+    .hero p {
+      font-size: 1.25rem;
+      margin-bottom: 2rem;
+      animation: fadeInUp 1s ease;
+    }
+    
+    .stat-card {
+      background: #fff;
+      border-radius: 1rem;
+      padding: 2rem;
+      text-align: center;
+      box-shadow: var(--shadow);
+      transition: all 0.3s ease;
+      height: 100%;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    
+    .stat-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-hover);
+    }
+    
+    .stat-card i {
+      font-size: 2.6rem;
+      color: var(--primary);
+      margin-bottom: 0.6rem;
+    }
+    
+    .counter {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--accent);
+    }
+    
+    .card-elev {
+      border: none;
+      border-radius: 1rem;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: all 0.3s ease;
+      height: 100%;
+    }
+    
+    .card-elev:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-hover);
+    }
+    
+    .product-thumb {
+      height: 200px;
+      object-fit: cover;
+      width: 100%;
+      transition: all 0.5s ease;
+    }
+    
+    .card-elev:hover .product-thumb {
+      transform: scale(1.05);
+    }
+    
+    .official-avatar {
+      width: 150px;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 4px solid var(--accent);
+      background: #fff;
+      box-shadow: var(--shadow);
+      transition: all 0.3s ease;
+    }
+    
+    .official-item:hover .official-avatar {
+      transform: scale(1.05);
+      border-color: var(--accent-light);
+    }
+    
+    footer {
+      background: linear-gradient(to right, #0a1920, #111);
+      color: #bbb;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    footer::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(to right, var(--accent), var(--primary));
+    }
+    
+    footer a {
+      color: #bbb;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+    
+    footer a:hover {
+      color: #fff;
+      padding-left: 5px;
+    }
+    
+    /* Floating */
+    .wa-float {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      z-index: 1030;
+      animation: pulse 2s infinite;
+    }
+    
+    .to-top {
+      position: fixed;
+      right: 20px;
+      bottom: 80px;
+      z-index: 1030;
+      display: none;
+      animation: fadeIn 0.5s ease;
+    }
+    
+    /* Announcement bar */
+    .announcement-bar {
+      background: linear-gradient(90deg, var(--primary-dark), var(--primary));
+      color: white;
+      padding: 10px 0;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .announcement-bar::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h20L0 20z' fill='%23ffffff' fill-opacity='0.05'/%3E%3C/svg%3E");
+      opacity: 0.1;
+    }
+    
+    /* New sections */
+    .feature-icon {
+      font-size: 2.5rem;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+    
+    .testimonial-card {
+      background: white;
+      border-radius: 1rem;
+      padding: 2rem;
+      box-shadow: var(--shadow);
+      position: relative;
+      margin-top: 2rem;
+    }
+    
+    .testimonial-card::before {
+      content: '\201C';
+      font-size: 5rem;
+      color: var(--accent-light);
+      position: absolute;
+      top: -1rem;
+      left: 1rem;
+      line-height: 1;
+      opacity: 0.2;
+      font-family: Georgia, serif;
+    }
+    
+    .testimonial-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--accent);
+    }
+    
+    .gallery-item {
+      border-radius: 0.5rem;
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+    }
+    
+    .gallery-item img {
+      transition: all 0.5s ease;
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+    
+    .gallery-item:hover img {
+      transform: scale(1.1);
+    }
+    
+    .gallery-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+      padding: 1rem;
+      color: white;
+      transform: translateY(100%);
+      transition: all 0.3s ease;
+    }
+    
+    .gallery-item:hover .gallery-overlay {
+      transform: translateY(0);
+    }
+    
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+    
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+    
+    /* Dark mode */
+    .dark body {
+      background: #0b1220;
+      color: #e5e7eb;
+    }
+    
+    .dark .navbar {
+      background: #0f172a !important;
+    }
+    
+    .dark .stat-card,
+    .dark .card-elev,
+    .dark .testimonial-card {
+      background: #1e293b;
+      color: #e5e7eb;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+    }
+    
+    .dark footer {
+      background: #020617;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+      
+      .hero .carousel-item {
+        min-height: 500px;
+        height: 70vh;
+      }
+      
+      .section-title {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
 </head>
-
 <body>
-
-    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
-        <div class="container">
-            <a class="navbar-brand" href="/">
-                <img src="/img/logo.png" alt="Logo Desa" class="me-2">
-                <strong>Desa Kaliboja</strong>
-            </a>
-            
-        <div class="d-flex">
-    <button type="button" class="btn btn-outline-primary me-2" data-bs-toggle="modal" data-bs-target="#scanModal">
-        <i class="fas fa-qrcode me-2"></i>Absensi
+<nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top">
+  <div class="container">
+    <a class="navbar-brand fw-bold" href="/">
+      <img src="/img/logo.png" class="me-2" alt="Logo">Desa Kaliboja
+    </a>
+    <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <span class="navbar-toggler-icon"></span>
     </button>
-    <a href="/dashboard" class="btn btn-primary">Login Admin</a>
-</div>
-    </nav>
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav ms-auto align-items-lg-center">
+        <li class="nav-item"><a href="#statistik" class="nav-link">Statistik</a></li>
+      <li class="nav-item"><a href="#berita" class="nav-link">Berita</a></li>
+        <li class="nav-item"><a href="#produk" class="nav-link">Produk</a></li>
+        <li class="nav-item"><a href="#potensi" class="nav-link">Potensi</a></li>
+        <li class="nav-item"><a href="#agenda" class="nav-link">Agenda</a></li>
+        <li class="nav-item"><a href="#aparatur" class="nav-link">Aparatur</a></li>
+        <li class="nav-item"><a href="#galeri" class="nav-link">Galeri</a></li>
+        <li class="nav-item ms-lg-3"><a href="/login" class="btn btn-primary btn-sm">Login</a></li>
+        <li class="nav-item ms-2">
+          <button id="darkToggle" class="btn btn-outline-secondary btn-sm" title="Dark Mode"><i class="fa-solid fa-moon"></i></button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
 
-    <header class="hero-section">
-        <div class="container">
-            <h1 class="display-4">Portal Informasi Desa Kaliboja</h1>
-            <p class="lead">Menyajikan berita dan informasi terkini seputar kegiatan dan potensi desa.</p>
+<!-- Pengumuman (marquee halus) -->
+
+
+<!-- HERO Carousel -->
+<section class="hero">
+  <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="5000">
+    <div class="carousel-inner">
+      <div class="carousel-item active" style="background-image:url('https://images.unsplash.com/photo-1591822059941-5d9732490a92?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80')">
+        <div class="carousel-caption text-center">
+          <h1 class="display-4 fw-bold">Desa Kaliboja</h1>
+          <p class="lead fs-4">Transparan, partisipatif, dan berdaya saing.</p>
+          <a href="#produk" class="btn btn-primary btn-lg mt-3">Lihat Produk Unggulan</a>
         </div>
-    </header>
-
-    <section class="container my-5 py-5">
-        <div class="row g-4">
-            <?php foreach ($stats as $stat) : ?>
-                <div class="col-md-4">
-                    <div class="stat-card">
-                        <div class="icon mb-3"><i class="<?= esc($stat['icon']) ?>"></i></div>
-                        <h5 class="fw-bold"><?= esc($stat['label']) ?></h5>
-                        <p class="fs-4 mb-0"><?= esc($stat['value']) ?></p>
-                    </div>
-                </div>
-            <?php endforeach; ?>
-        </div>
-    </section>
-
-    <main class="container my-5">
-        <h2 class="text-center mb-5 section-title">Berita Terbaru</h2>
-        <div class="row">
-            <?php if (!empty($news)) : ?>
-                <?php foreach ($news as $item) : ?>
-                    <div class="col-lg-3 col-md-6 mb-4">
-                        <div class="card news-card h-100 shadow-sm">
-                            <img src="<?= $item['image'] ? '/uploads/news/' . esc($item['image']) : 'https://placehold.co/600x400/e0e0e0/666?text=Tidak+Ada+Gambar' ?>" class="card-img-top news-card-img" alt="<?= esc($item['title']) ?>">
-                            <div class="card-body d-flex flex-column">
-                                <h6 class="card-title flex-grow-1"><strong><?= esc($item['title']) ?></strong></h6>
-                                <p class="card-text small text-muted"><?= esc(word_limiter($item['content'], 15, '...')) ?></p>
-                            </div>
-                            <div class="card-footer bg-white border-0">
-                                <small class="text-muted">
-                                    <i class="fas fa-clock fa-sm"></i>
-                                    <?php if (!empty($item['created_at'])) : ?>
-    <?= \CodeIgniter\I18n\Time::parse($item['created_at'])->toLocalizedString('d MMMM yyyy') ?>
-<?php endif; ?>
-                                </small>
-                            </div>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-            <?php else : ?>
-                <div class="col-12">
-                    <p class="text-center text-muted">Belum ada berita yang dipublikasikan.</p>
-                </div>
-            <?php endif; ?>
-        </div>
-    </main>
-
-    <section class="py-5">
-        <div class="container">
-            <h2 class="text-center mb-5 section-title">Potensi Desa</h2>
-            <div class="row g-4">
-                <?php foreach ($potentials as $potential) : ?>
-                    <div class="col-lg-3 col-md-6">
-                        <div class="potential-card">
-                            <div class="icon mb-3"><i class="<?= esc($potential['icon']) ?>"></i></div>
-                            <h5 class="fw-bold"><?= esc($potential['title']) ?></h5>
-                            <p class="text-muted small"><?= esc($potential['description']) ?></p>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-        </div>
-    </section>
-
-    <section class="bg-light py-5">
-        <div class="container">
-            <h2 class="text-center mb-5 section-title">Aparatur Desa</h2>
-            <div class="row text-center">
-                <?php foreach ($officials as $official) : ?>
-                    <div class="col-lg-4 mb-4">
-                        <div class="official-card">
-                            <img src="<?= esc($official['photo']) ?>" class="rounded-circle mb-3" alt="<?= esc($official['name']) ?>">
-                            <h5 class="mb-1"><?= esc($official['name']) ?></h5>
-                            <p class="text-muted"><?= esc($official['position']) ?></p>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-        </div>
-    </section>
-
-    <section class="container-fluid p-0">
-        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31687.97181014818!2d109.65610235!3d-7.000996449999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e6fe67a4210cfed%3A0x5027a76e3564750!2sPekalongan%2C%20Pekalongan%20City%2C%20Central%20Java!5e0!3m2!1sen!2sid!4v1663123456789!5m2!1sen!2sid" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-    </section>
-
-    <!-- Modal Scanner -->
-<div class="modal fade" id="scanModal" tabindex="-1" aria-labelledby="scanModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="scanModalLabel">Scan QR Code Absensi</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
       </div>
-      <div class="modal-body text-center">
-        <div id="reader" style="width:100%; max-width:400px; min-height:300px; margin:auto;"></div>
-        <div id="scanResult" class="mt-3"></div>
+      <div class="carousel-item" style="background-image:url('https://images.unsplash.com/photo-1586773860418-d37222d8fce3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80')">
+        <div class="carousel-caption text-center">
+          <h1 class="display-4 fw-bold">Potensi Alam & UMKM</h1>
+          <p class="lead fs-4">Pertanian, peternakan, kerajinan, dan wisata.</p>
+          <a href="#potensi" class="btn btn-primary btn-lg mt-3">Jelajahi Potensi</a>
+        </div>
+      </div>
+      <div class="carousel-item" style="background-image:url('https://images.unsplash.com/photo-1516387938699-a93567ec168e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80')">
+        <div class="carousel-caption text-center">
+          <h1 class="display-4 fw-bold">Layanan Digital</h1>
+          <p class="lead fs-4">Informasi publik, agenda, dan berita terkini.</p>
+          <a href="#layanan" class="btn btn-primary btn-lg mt-3">Lihat Layanan</a>
+        </div>
+      </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+</section>
+
+<!-- Fitur Layanan -->
+<section id="layanan" class="py-5 bg-light">
+  <div class="container">
+    <h2 class="section-title">Layanan Digital Desa</h2>
+    <div class="row g-4">
+      <div class="col-md-4" data-aos="fade-up" data-aos-delay="0">
+        <div class="text-center p-4">
+          <div class="feature-icon">
+            <i class="fa-solid fa-file-lines"></i>
+          </div>
+          <h4>Administrasi</h4>
+          <p>Layanan surat menyurat dan administrasi kependudukan secara online</p>
+          <a href="/layanan/administrasi" class="btn btn-outline-primary btn-sm">Selengkapnya</a>
+        </div>
+      </div>
+      <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="text-center p-4">
+          <div class="feature-icon">
+            <i class="fa-solid fa-hand-holding-heart"></i>
+          </div>
+          <h4>Bantuan Sosial</h4>
+          <p>Informasi dan pendaftaran program bantuan sosial dari pemerintah</p>
+          <a href="/layanan/bansos" class="btn btn-outline-primary btn-sm">Selengkapnya</a>
+        </div>
+      </div>
+      <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+        <div class="text-center p-4">
+          <div class="feature-icon">
+            <i class="fa-solid fa-scale-balanced"></i>
+          </div>
+          <h4>Pengaduan</h4>
+          <p>Sampaikan pengaduan dan aspirasi untuk kemajuan desa kita</p>
+          <a href="/layanan/pengaduan" class="btn btn-outline-primary btn-sm">Selengkapnya</a>
+        </div>
       </div>
     </div>
   </div>
+</section>
+
+<!-- Statistik -->
+<section id="statistik" class="py-5">
+  <div class="container">
+    <h2 class="section-title">Statistik Desa</h2>
+    <div class="row g-4">
+      <?php foreach($stats as $s): ?>
+      <div class="col-6 col-md-3">
+        <div class="stat-card" data-aos="fade-up">
+          <i class="<?= esc($s['icon']) ?>"></i>
+          <div class="h6 mb-1"><?= esc($s['label']) ?></div>
+          <div class="counter" data-target="<?= (int)$s['value'] ?>">0</div>
+        </div>
+      </div>
+      <?php endforeach; ?>
+    </div>
+    <div class="text-center mt-4">
+      <a href="/dashboard/statistik" class="btn btn-outline-primary">Lihat Detail Statistik</a>
+    </div>
+  </div>
+</section>
+
+<!-- Berita -->
+<section id="berita" class="py-5 bg-light">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h2 class="section-title m-0">Berita Terbaru</h2>
+      <a href="/berita" class="btn btn-outline-primary btn-sm">Lihat Semua</a>
+    </div>
+    <div class="row g-4">
+      <?php if(!empty($news)): foreach($news as $n): ?>
+      <div class="col-md-4" data-aos="fade-up">
+        <article class="card card-elev h-100">
+          <div class="position-relative overflow-hidden">
+            <img class="w-100" style="height:200px;object-fit:cover" loading="lazy"
+                 src="<?= $n['image'] ? '/uploads/news/'.esc($n['image']) : 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80' ?>" alt="<?= esc($n['title']) ?>">
+            <div class="position-absolute top-0 end-0 m-2">
+              <span class="badge bg-primary"><?= esc($n['category'] ?? 'Berita') ?></span>
+            </div>
+          </div>
+          <div class="card-body">
+            <h5 class="fw-bold mb-2"><?= esc($n['title']) ?></h5>
+            <p class="text-muted mb-3"><?= esc(word_limiter(strip_tags($n['content']), 15)) ?></p>
+            <div class="d-flex justify-content-between align-items-center">
+              <small class="text-secondary"><i class="fa-regular fa-clock me-1"></i><?= date('d M Y', strtotime($n['created_at'])) ?></small>
+              <a href="news/show"d<?= esc($n['slug'] ?? $n['id']) ?>" class="btn btn-sm btn-outline-primary">Baca Selengkapnya</a>
+            </div>
+          </div>
+        </article>
+      </div>
+      <?php endforeach; else: ?>
+        <div class="col-12">
+          <div class="text-center py-5">
+            <i class="fa-regular fa-newspaper fa-3x text-muted mb-3"></i>
+            <h5 class="text-muted">Belum ada berita</h5>
+            <a href="/dashboard/berita/tambah" class="btn btn-primary mt-2">Tambah Berita Pertama</a>
+          </div>
+        </div>
+      <?php endif; ?>
+    </div>
+  </div>
+</section>
+
+<!-- Produk Unggulan -->
+<section id="produk" class="py-5">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h2 class="section-title m-0">Produk Unggulan</h2>
+      <div>
+        <a href="/produk" class="btn btn-outline-primary btn-sm me-2">Lihat Semua</a>
+        <a href="/dashboard/produk/tambah" class="btn btn-primary btn-sm">Tambah Produk</a>
+      </div>
+    </div>
+    <div class="row g-4">
+      <?php if(!empty($products)): foreach($products as $p): ?>
+      <div class="col-md-3" data-aos="fade-up">
+        <div class="card card-elev h-100">
+          <div class="overflow-hidden">
+            <img src="<?= $p['image'] ? '/uploads/products/'.esc($p['image']) : 'https://images.unsplash.com/photo-1603400521630-9f2de124b33b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80' ?>"
+                 class="product-thumb" alt="<?= esc($p['name']) ?>" loading="lazy">
+          </div>
+          <div class="card-body">
+            <div class="fw-bold mb-1"><?= esc($p['name']) ?></div>
+            <div class="small text-muted mb-2"><?= esc(word_limiter($p['description'], 10)) ?></div>
+            <div class="fw-bold text-success mb-2">Rp <?= number_format((float)$p['price'],0,',','.') ?></div>
+            <div class="d-flex justify-content-between align-items-center">
+              <?php if(!empty($p['contact'])): ?>
+              <a href="https://wa.me/<?= preg_replace('/\D/','',$p['contact']) ?>" target="_blank" class="btn btn-success btn-sm">
+                <i class="fa-brands fa-whatsapp me-1"></i> Pesan
+              </a>
+              <?php endif; ?>
+              <small class="text-muted"><i class="fa-solid fa-store me-1"></i> <?= esc($p['store_name'] ?? 'BUMDes Kaliboja') ?></small>
+            </div>
+          </div>
+        </div>
+      </div>
+      <?php endforeach; else: ?>
+        <div class="col-12">
+          <div class="text-center py-5">
+            <i class="fa-solid fa-cart-shopping fa-3x text-muted mb-3"></i>
+            <h5 class="text-muted">Belum ada produk unggulan</h5>
+            <a href="products/index" class="btn btn-primary mt-2">Tambah Produk</a>
+          </div>
+        </div>
+      <?php endif; ?>
+    </div>
+  </div>
+</section>
+
+<!-- Potensi -->
+<section id="potensi" class="py-5 bg-light">
+  <div class="container">
+    <h2 class="section-title">Potensi Desa</h2>
+    <div class="row g-4">
+      <?php foreach($potentials as $p): ?>
+      <div class="col-md-4" data-aos="fade-up">
+        <div class="card card-elev p-4 text-center h-100">
+          <i class="<?= esc($p['icon']) ?> fa-3x mb-3 text-primary"></i>
+          <h4 class="fw-bold"><?= esc($p['title']) ?></h4>
+          <p class="text-muted"><?= esc($p['description']) ?></p>
+          <a href="/potensi/<?= esc(url_title($p['title'])) ?>" class="btn btn-outline-primary btn-sm mt-auto">Jelajahi</a>
+        </div>
+      </div>
+      <?php endforeach; ?>
+    </div>
+  </div>
+</section>
+<!-- Wisata -->
+<section id="wisata" class="py-5">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h2 class="section-title m-0">Wisata Desa</h2>
+      <!-- tombol lihat semua langsung ke route /wisata -->
+      <a href="<?= base_url('wisata') ?>" class="btn btn-outline-primary btn-sm">Lihat Semua</a>
+    </div>
+
+    <div class="row g-4">
+      <?php if (!empty($wisata)): foreach ($wisata as $w): ?>
+        <div class="col-md-4" data-aos="fade-up">
+          <div class="card card-elev h-100">
+            <div class="overflow-hidden">
+              <img src="<?= $w['gambar'] 
+                ? base_url('uploads/wisata/' . esc($w['gambar'])) 
+                : 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=400&q=80' ?>"
+                class="product-thumb" 
+                alt="<?= esc($w['nama']) ?>" 
+                loading="lazy">
+            </div>
+            <div class="card-body">
+              <h5 class="fw-bold mb-2"><?= esc($w['nama']) ?></h5>
+              <p class="text-muted mb-3">
+                <?= esc(word_limiter(strip_tags($w['deskripsi']), 15)) ?>
+              </p>
+              <div class="d-flex justify-content-between align-items-center">
+                <!-- link detail -->
+                <a href="<?= base_url('wisata/' . $w['id']) ?>" 
+                   class="btn btn-sm btn-outline-primary">Lihat Detail</a>
+
+                <small class="text-muted">
+                  <i class="fa-solid fa-location-dot me-1"></i> 
+                  <?= esc($w['lokasi'] ?? 'Kaliboja') ?>
+                </small>
+              </div>
+            </div>
+          </div>
+        </div>
+      <?php endforeach; else: ?>
+        <div class="col-12">
+          <div class="text-center py-5">
+            <i class="fa-solid fa-mountain-sun fa-3x text-muted mb-3"></i>
+            <h5 class="text-muted">Belum ada data wisata</h5>
+          </div>
+        </div>
+      <?php endif; ?>
+    </div>
+  </div>
+</section>
+
+
+<!-- Testimoni -->
+<section class="py-5">
+  <div class="container">
+    <h2 class="section-title">Apa Kata Mereka?</h2>
+    <div class="row">
+      <div class="col-md-8 mx-auto">
+        <div class="testimonial-card" data-aos="fade-up">
+          <div class="d-flex align-items-center mb-3">
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" class="testimonial-avatar me-3" alt="Testimoni">
+            <div>
+              <h5 class="mb-0">Budi Santoso</h5>
+              <small class="text-muted">Pelaku UMKM</small>
+            </div>
+          </div>
+          <p class="mb-0">"Berkat website desa, produk saya semakin dikenal dan pemasaran menjadi lebih luas. Terima kasih kepada pengelola website yang telah memfasilitasi kami."</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Agenda -->
+<section id="agenda" class="py-5 bg-light">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h2 class="section-title m-0">Agenda Kegiatan</h2>
+      <div>
+        <a href="/agenda" class="btn btn-outline-primary btn-sm me-2">Lihat Semua</a>
+        <a href="/dashboard/agenda/tambah" class="btn btn-primary btn-sm">Tambah Agenda</a>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-8 mx-auto">
+        <?php if(!empty($events)): foreach($events as $e): ?>
+        <div class="card card-elev mb-3" data-aos="fade-up">
+          <div class="card-body">
+            <div class="d-flex align-items-center">
+              <div class="bg-primary text-white text-center p-3 rounded me-4" style="min-width: 70px;">
+                <div class="fw-bold fs-4"><?= date('d', strtotime($e['date'])) ?></div>
+                <div class="small"><?= date('M', strtotime($e['date'])) ?></div>
+              </div>
+              <div class="flex-grow-1">
+                <h5 class="card-title mb-1"><?= esc($e['title']) ?></h5>
+                <p class="card-text small text-muted mb-1">
+                  <i class="fa-regular fa-clock me-1"></i> <?= date('H:i', strtotime($e['time'] ?? '08:00')) ?> 
+                  <i class="fa-solid fa-location-dot ms-3 me-1"></i> <?= esc($e['location'] ?? 'Lokasi belum ditentukan') ?>
+                </p>
+                <p class="card-text small"><?= esc(word_limiter($e['description'] ?? '', 20)) ?></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <?php endforeach; else: ?>
+          <div class="text-center py-5">
+            <i class="fa-regular fa-calendar fa-3x text-muted mb-3"></i>
+            <h5 class="text-muted">Belum ada agenda</h5>
+            <a href="/dashboard/agenda/tambah" class="btn btn-primary mt-2">Tambah Agenda Pertama</a>
+          </div>
+        <?php endif; ?>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Aparatur -->
+<section id="aparatur" class="py-5">
+  <div class="container">
+    <h2 class="section-title">Aparatur Desa</h2>
+    <div class="row g-4 justify-content-center">
+      <?php if(!empty($officials)): foreach($officials as $o): ?>
+      <div class="col-6 col-md-3 text-center official-item" data-aos="fade-up">
+        <img src="<?= esc($o['photo'] ?: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80') ?>" class="official-avatar mb-3" alt="<?= esc($o['name']) ?>">
+        <div class="fw-bold"><?= esc($o['name']) ?></div>
+        <div class="small text-muted mb-2"><?= esc($o['position']) ?></div>
+        <div class="d-flex justify-content-center">
+          <a href="#" class="text-primary me-2"><i class="fa-brands fa-whatsapp"></i></a>
+          <a href="#" class="text-primary me-2"><i class="fa-regular fa-envelope"></i></a>
+          <a href="#" class="text-primary"><i class="fa-regular fa-user"></i></a>
+        </div>
+      </div>
+      <?php endforeach; else: ?>
+        <div class="col-12">
+  <div class="text-center py-5">
+    <i class="fa-solid fa-users fa-3x text-muted mb-3"></i>
+    <h5 class="text-muted">Data aparatur belum tersedia</h5>
+    <a href="/dashboard/aparatur/tambah" class="btn btn-primary mt-2">Tambah Data Aparatur</a>
+  </div>
+</div>
+<?php endif; ?>
+</div>
+</div>
+</section>
+
+<!-- Galeri -->
+<section id="galeri" class="py-5 bg-light">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h2 class="section-title m-0">Galeri Desa</h2>
+      <a href="/galeri" class="btn btn-outline-primary btn-sm">Lihat Semua</a>
+    </div>
+    <div class="row g-3">
+      <div class="col-md-4" data-aos="fade-up">
+        <div class="gallery-item">
+          <img src="https://images.unsplash.com/photo-1516387938699-a93567ec168e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Kegiatan Desa">
+          <div class="gallery-overlay">
+            <h6 class="mb-0">Kegiatan Desa</h6>
+            <small>Kerja bakti bulanan</small>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="gallery-item">
+          <img src="https://images.unsplash.com/photo-1586773860418-d37222d8fce3?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Panen Raya">
+          <div class="gallery-overlay">
+            <h6 class="mb-0">Panen Raya</h6>
+            <small>Hasil pertanian desa</small>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+        <div class="gallery-item">
+          <img src="https://images.unsplash.com/photo-1591822059941-5d9732490a92?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Pemandangan Desa">
+          <div class="gallery-overlay">
+            <h6 class="mb-0">Pemandangan Desa</h6>
+            <small>Keindahan alam Kaliboja</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Peta -->
+<section class="container-fluid p-0">
+  <div class="row g-0">
+    <div class="col-md-8">
+      <iframe src="https://maps.google.com/maps?q=desa%20kaliboja&t=&z=13&ie=UTF8&iwloc=&output=embed" width="100%" height="450" style="border:0" loading="lazy" allowfullscreen></iframe>
+    </div>
+    <div class="col-md-4 bg-primary text-white p-5">
+      <h3 class="mb-4">Kunjungi Desa Kami</h3>
+      <p><i class="fa-solid fa-location-dot me-2"></i> Jl. Raya Kaliboja, Paninggaran, Pekalongan, Jawa Tengah</p>
+      <p><i class="fa-solid fa-phone me-2"></i> (0285) 123-456</p>
+      <p><i class="fa-solid fa-envelope me-2"></i> kontak@kaliboja.desa.id</p>
+      <p><i class="fa-solid fa-clock me-2"></i> Senin - Jumat: 08:00 - 16:00</p>
+      <a href="https://goo.gl/maps/example" target="_blank" class="btn btn-light mt-3">
+        <i class="fa-solid fa-directions me-2"></i> Dapatkan Petunjuk Arah
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="mt-0">
+  <div class="container py-5">
+    <div class="row g-4">
+      <div class="col-md-4">
+        <h5 class="text-white mb-4">Desa Kaliboja</h5>
+        <p class="mb-4">Portal resmi desa untuk transparansi informasi, promosi potensi, dan pelayanan digital kepada masyarakat.</p>
+        <div class="d-flex">
+          <a href="#" class="text-white me-3"><i class="fa-brands fa-facebook fa-lg"></i></a>
+          <a href="#" class="text-white me-3"><i class="fa-brands fa-instagram fa-lg"></i></a>
+          <a href="#" class="text-white me-3"><i class="fa-brands fa-youtube fa-lg"></i></a>
+          <a href="#" class="text-white"><i class="fa-brands fa-whatsapp fa-lg"></i></a>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <h5 class="text-white mb-4">Kontak</h5>
+        <ul class="list-unstyled small">
+          <li class="mb-2"><i class="fa-solid fa-location-dot me-2"></i>Jl. Raya Kaliboja, Paninggaran</li>
+          <li class="mb-2"><i class="fa-solid fa-phone me-2"></i>(0285) 123-456</li>
+          <li class="mb-2"><i class="fa-solid fa-envelope me-2"></i>kontak@kaliboja.desa.id</li>
+          <li><i class="fa-solid fa-clock me-2"></i>Senin - Jumat: 08:00 - 16:00</li>
+        </ul>
+      </div>
+      <div class="col-md-4">
+        <h5 class="text-white mb-4">Tautan Cepat</h5>
+        <div class="row">
+          <div class="col-6">
+            <ul class="list-unstyled small">
+              <li class="mb-2"><a href="/berita">Berita</a></li>
+              <li class="mb-2"><a href="/produk">Produk</a></li>
+              <li class="mb-2"><a href="/agenda">Agenda</a></li>
+              <li class="mb-2"><a href="/galeri">Galeri</a></li>
+            </ul>
+          </div>
+          <div class="col-6">
+            <ul class="list-unstyled small">
+              <li class="mb-2"><a href="/layanan">Layanan</a></li>
+              <li class="mb-2"><a href="/potensi">Potensi</a></li>
+              <li class="mb-2"><a href="/aparatur">Aparatur</a></li>
+              <li class="mb-2"><a href="/peta">Peta</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr class="border-secondary my-4">
+    <div class="text-center small">
+      <div class="mb-2">&copy; <?= date('Y') ?> Pemerintah Desa Kaliboja. All Rights Reserved.</div>
+      <div>Dikembangkan oleh <a href="#" class="text-white">Tim IT Desa Kaliboja</a></div>
+    </div>
+  </div>
+</footer>
+
+<!-- Floating WA & To Top -->
+<a class="wa-float btn btn-success rounded-circle shadow" href="https://wa.me/6281234567890" target="_blank" title="Hubungi via WhatsApp">
+  <i class="fa-brands fa-whatsapp fa-lg"></i>
+</a>
+
+<button id="toTop" class="to-top btn btn-primary rounded-circle shadow" title="Kembali ke atas">
+  <i class="fa-solid fa-arrow-up"></i>
+</button>
+
+<!-- Loading Spinner -->
+<div class="loading-spinner" style="position:fixed;top:0;left:0;width:100%;height:100%;background:white;z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity 0.5s ease">
+  <div class="spinner-border text-primary" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
 </div>
 
-    <footer class="footer mt-auto py-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-4 mb-4 mb-lg-0">
-                    <h5>Tentang Desa Kaliboja</h5>
-                    <p>Website resmi Pemerintah Desa Kaliboja, Kecamatan Paninggaran, Kabupaten Pekalongan. Menyajikan informasi transparan dan akurat untuk masyarakat.</p>
-                </div>
-                <div class="col-lg-4 mb-4 mb-lg-0">
-                    <h5>Kontak Kami</h5>
-                    <ul class="list-unstyled">
-                        <li><i class="fas fa-map-marker-alt me-2"></i> Jl. Raya Kaliboja, Paninggaran</li>
-                        <li><i class="fas fa-phone me-2"></i> (0285) 123-456</li>
-                        <li><i class="fas fa-envelope me-2"></i> kontak@kaliboja.desa.id</li>
-                    </ul>
-                </div>
-                <div class="col-lg-4">
-                    <h5>Tautan Terkait</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="#">Kabupaten Pekalongan</a></li>
-                        <li><a href="#">Kecamatan Paninggaran</a></li>
-                        <li><a href="#">Berita Nasional</a></li>
-                    </ul>
-                </div>
-            </div>
-            <hr class="my-4">
-            <div class="text-center">
-                <span>© <?= date('Y'); ?> Pemerintah Desa Kaliboja. All Rights Reserved.</span>
-            </div>
-        </div>
-    </footer>
-    <script src="https://unpkg.com/html5-qrcode@2.0.9/dist/html5-qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const scanModal = document.getElementById('scanModal');
-    const scanResultDiv = document.getElementById('scanResult');
-    let html5QrcodeScanner;
+  // Inisialisasi AOS
+  AOS.init({
+    once: true,
+    duration: 800,
+    offset: 100
+  });
 
-    function showResult(message, type) {
-        scanResultDiv.textContent = message;
-        scanResultDiv.className = `alert alert-${type}`;
+  // Loading spinner
+  window.addEventListener('load', function() {
+    document.querySelector('.loading-spinner').style.opacity = '0';
+    setTimeout(function() {
+      document.querySelector('.loading-spinner').style.display = 'none';
+    }, 500);
+  });
+
+  // Counter animation
+  document.querySelectorAll('.counter').forEach(el => {
+    const target = +el.dataset.target || 0;
+    let c = 0;
+    const step = Math.max(1, Math.floor(target / 80));
+    const itv = setInterval(() => {
+      c += step;
+      if (c >= target) {
+        c = target;
+        clearInterval(itv);
+      }
+      el.textContent = c.toLocaleString('id-ID');
+    }, 20);
+  });
+
+  // Scroll effects & to top
+  const toTop = document.getElementById('toTop');
+  const navbar = document.querySelector('.navbar');
+  window.addEventListener('scroll', () => {
+    toTop.style.display = window.scrollY > 400 ? 'block' : 'none';
+    if (window.scrollY > 100) {
+      navbar.classList.add('scrolled');
+    } else {
+      navbar.classList.remove('scrolled');
     }
-
-    function onScanSuccess(decodedText, decodedResult) {
-        // stop scanner biar tidak terus membaca
-        html5QrcodeScanner.clear();
-
-        showResult('Memproses...', 'info');
-
-        // kirim ke server sesuai route scan/process
-        fetch("<?= site_url('scan/process') ?>", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'X-Requested-With': 'XMLHttpRequest'
-            },
-            body: "qr_code=" + encodeURIComponent(decodedText) + 
-                  "&<?= csrf_token() ?>=<?= csrf_hash() ?>"
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.status === 'success') {
-                showResult(data.message + 
-                    `\nNama: ${data.data.name}\nJabatan: ${data.data.position}\nAlamat: ${data.data.address}`, 
-                    'success'
-                );
-            } else {
-                showResult(data.message, 'danger');
-            }
-        })
-        .catch(() => {
-            showResult('Gagal terhubung ke server.', 'danger');
-        });
-    }
-
-    // jalankan scanner saat modal dibuka
-    scanModal.addEventListener('shown.bs.modal', () => {
-        html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 250 });
-        html5QrcodeScanner.render(onScanSuccess);
+  });
+  toTop.addEventListener('click', () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
     });
+  });
 
-    // bersihkan saat modal ditutup
-    scanModal.addEventListener('hidden.bs.modal', () => {
-    if (html5QrcodeScanner) {
-        html5QrcodeScanner.clear();
+  // Dark mode (client only)
+  const darkToggle = document.getElementById('darkToggle');
+  const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
+  // Cek preferensi sistem atau localStorage
+  if (localStorage.getItem('darkMode') === 'enabled' ||
+    (localStorage.getItem('darkMode') !== 'disabled' && darkModeMediaQuery.matches)) {
+    document.documentElement.classList.add('dark');
+    darkToggle.innerHTML = '<i class="fa-solid fa-sun"></i>';
+  }
+
+  darkToggle.addEventListener('click', () => {
+    document.documentElement.classList.toggle('dark');
+    if (document.documentElement.classList.contains('dark')) {
+      localStorage.setItem('darkMode', 'enabled');
+      darkToggle.innerHTML = '<i class="fa-solid fa-sun"></i>';
+    } else {
+      localStorage.setItem('darkMode', 'disabled');
+      darkToggle.innerHTML = '<i class="fa-solid fa-moon"></i>';
     }
-    scanResultDiv.innerHTML = ''; // ✅ reset isi, bukan class
-    scanResultDiv.className = ''; // biar normal
-});
+  });
 
-});
+  // Tanggal dan waktu real-time
+  function updateDateTime() {
+    const now = new Date();
+    const options = {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    };
+    const dateString = now.toLocaleDateString('id-ID', options);
+    const timeString = now.toLocaleTimeString('id-ID');
+    const dateElement = document.getElementById('current-date');
+    const timeElement = document.getElementById('current-time');
+    if (dateElement) dateElement.textContent = dateString;
+    if (timeElement) timeElement.textContent = timeString;
+  }
+  setInterval(updateDateTime, 1000);
+  updateDateTime();
+
+  // Animasi teks hero
+  document.addEventListener('DOMContentLoaded', function() {
+    const heroText = document.querySelector('.hero .carousel-caption');
+    if (heroText) {
+      heroText.style.opacity = '0';
+      setTimeout(() => {
+        heroText.style.transition = 'opacity 1s ease';
+        heroText.style.opacity = '1';
+      }, 300);
+    }
+  });
+
+  // Smooth scroll untuk navigasi
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      e.preventDefault();
+      const targetId = this.getAttribute('href');
+      if (targetId === '#') return;
+      const targetElement = document.querySelector(targetId);
+      if (targetElement) {
+        const navbarHeight = document.querySelector('.navbar').offsetHeight;
+        const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - navbarHeight;
+        window.scrollTo({
+          top: targetPosition,
+          behavior: 'smooth'
+        });
+      }
+    });
+  });
 </script>
-
-
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
 </body>
-
 </html>

@@ -38,7 +38,12 @@ class Autoload extends AutoloadConfig
      * @var array<string, list<string>|string>
      */
     public $psr4 = [
+        // TAMBAHKAN DUA BARIS INI SECARA MANUAL
+        'Dompdf'       => ROOTPATH . 'vendor/dompdf/dompdf/src',
+        'Sabberworm'   => ROOTPATH . 'vendor/sabberworm/php-css-parser/src',
+        
         APP_NAMESPACE => APPPATH,
+        'Config'      => APPPATH . 'Config',
     ];
 
     /**
@@ -89,4 +94,9 @@ class Autoload extends AutoloadConfig
      * @var list<string>
      */
     public $helpers = [];
+    // app/Config/Autoload.php
+
+// ...
+public $composerAutoload = FCPATH . '../vendor/autoload.php';
+// ...
 }

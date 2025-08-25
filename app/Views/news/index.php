@@ -110,21 +110,22 @@ helper('text'); // Memuat helper untuk fungsi word_limiter()
                             <a href="<?= base_url('dashboard/news/show/' . $item['id']) ?>"><?= esc($item['title']); ?></a>
                         </h5>
                         <p class="card-text text-muted small flex-grow-1">
-                            <?= esc(word_limiter($item['content'], 20, '...')); ?>
+                            <?= esc(word_limiter(strip_tags($item['content']), 20, '...')); ?>
                         </p>
                     </div>
                     <div class="card-footer">
                         <div class="d-flex justify-content-between align-items-center">
                              <small class="text-muted">
-                                <?php if (!empty($item['updated_at'])): ?>
-                                    <i class="fas fa-clock fa-sm"></i> <?= Time::parse($item['updated_at'])->toLocalizedString('d MMM yyyy') ?>
-                                <?php endif; ?>
-                            </small>
+                                 <?php if (!empty($item['updated_at'])): ?>
+                                     <i class="fas fa-clock fa-sm"></i> <?= Time::parse($item['updated_at'])->toLocalizedString('d MMM yyyy') ?>
+                                 <?php endif; ?>
+                             </small>
                             <div class="card-footer-actions">
                                 <a href="<?= base_url('dashboard/news/edit/' . $item['id']) ?>" class="btn btn-sm btn-warning" title="Edit">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                <form action="<?= base_url('news/delete/' . $item['id']) ?>" method="post" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus berita ini?')">
+                                <!-- ✅ FORM ACTION DIPERBAIKI -->
+                                <form action="<?= base_url('dashboard/news/delete/' . $item['id']) ?>" method="post" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus berita ini?')">
                                     <?= csrf_field() ?>
                                     <button type="submit" class="btn btn-sm btn-danger" title="Hapus">
                                         <i class="fas fa-trash"></i>

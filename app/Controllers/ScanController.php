@@ -3,37 +3,55 @@
 namespace App\Controllers;
 
 use App\Models\OfficialModel;
-use CodeIgniter\Controller;
+use App\Models\PresensiModel;
 
-class ScanController extends Controller
+class ScanController extends BaseController
 {
     public function process()
     {
-        $json = $this->request->getJSON();
-        $qrCode = null;
-
-        if ($json && isset($json->qr_code)) {
-            $qrCode = $json->qr_code;
+        if (!$this->request->isAJAX()) {
+            return $this->response->setStatusCode(403, 'Forbidden');
         }
 
-        if (!$qrCode) {
+        $qrCode = $this->request->getPost('qr_code');
+        if (empty($qrCode)) {
             return $this->response->setJSON(['status' => 'error', 'message' => 'QR Code tidak valid.']);
         }
 
-        $model = new OfficialModel();
-        $official = $model->where('qr_code', $qrCode)->first();
+        $officialModel = new OfficialModel();
+        $presensiModel = new PresensiModel();
+        $official = $officialModel->where('qr_code', $qrCode)->first();
 
-        if ($official) {
+        if (!$official) {
+            return $this->response->setJSON(['status' => 'error', 'message' => 'QR Code tidak terdaftar.']);
+        }
+
+        $today = date('Y-m-d');
+        $alreadyCheckedIn = $presensiModel->where('official_id', $official['id'])
+            ->where('DATE(check_in_time)', $today)->first();
+
+        if ($alreadyCheckedIn) {
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Gagal! ' . $official['name'] . ' sudah absen hari ini.']);
+        }
+
+        $presensiData = [
+            'official_id'   => $official['id'],
+            'check_in_time' => date('Y-m-d H:i:s'),
+            'status'        => 'Hadir'
+        ];
+
+        if ($presensiModel->save($presensiData)) {
             return $this->response->setJSON([
-                'status' => 'success',
-                'message' => 'Absensi berhasil dicatat!',
-                'data' => $official
-            ]);
-        } else {
-            return $this->response->setJSON([
-                'status' => 'error',
-                'message' => 'Data tidak ditemukan di database.'
+                'status'  => 'success',
+                'message' => 'Absensi Berhasil!',
+                'data'    => [
+                    'name'     => $official['name'],
+                    'position' => $official['position'],
+                    'time'     => date('d F Y, H:i:s')
+                ]
             ]);
         }
+        
+        return $this->response->setJSON(['status' => 'error', 'message' => 'Kesalahan Server.']);
     }
 }
