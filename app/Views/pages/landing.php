@@ -474,7 +474,7 @@
       <ul class="navbar-nav ms-auto align-items-lg-center">
         <li class="nav-item"><a href="#statistik" class="nav-link">Statistik</a></li>
       <li class="nav-item"><a href="#berita" class="nav-link">Berita</a></li>
-        <li class="nav-item"><a href="#produk" class="nav-link">Produk</a></li>
+        <li class="nav-item"><a href="/produk" class="nav-link">Produk</a></li>
         <li class="nav-item"><a href="#potensi" class="nav-link">Potensi</a></li>
         <li class="nav-item"><a href="#agenda" class="nav-link">Agenda</a></li>
         <li class="nav-item"><a href="#aparatur" class="nav-link">Aparatur</a></li>
@@ -499,7 +499,7 @@
         <div class="carousel-caption text-center">
           <h1 class="display-4 fw-bold">Desa Kaliboja</h1>
           <p class="lead fs-4">Transparan, partisipatif, dan berdaya saing.</p>
-          <a href="#produk" class="btn btn-primary btn-lg mt-3">Lihat Produk Unggulan</a>
+          <a href="/produk" class="btn btn-primary btn-lg mt-3">Lihat Produk Unggulan</a>
         </div>
       </div>
       <div class="carousel-item" style="background-image:url('https://images.unsplash.com/photo-1586773860418-d37222d8fce3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80')">
@@ -528,90 +528,92 @@
   </div>
 </section>
 
-<!-- Fitur Layanan -->
-<section id="layanan" class="py-5 bg-light">
+<!-- Visi & Misi Desa -->
+<section id="visi-misi" class="py-5 bg-light">
   <div class="container">
-    <h2 class="section-title">Layanan Digital Desa</h2>
-    <div class="row g-4">
-      <div class="col-md-4" data-aos="fade-up" data-aos-delay="0">
-        <div class="text-center p-4">
-          <div class="feature-icon">
-            <i class="fa-solid fa-file-lines"></i>
-          </div>
-          <h4>Administrasi</h4>
-          <p>Layanan surat menyurat dan administrasi kependudukan secara online</p>
-          <a href="/layanan/administrasi" class="btn btn-outline-primary btn-sm">Selengkapnya</a>
-        </div>
-      </div>
-      <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
-        <div class="text-center p-4">
-          <div class="feature-icon">
-            <i class="fa-solid fa-hand-holding-heart"></i>
-          </div>
-          <h4>Bantuan Sosial</h4>
-          <p>Informasi dan pendaftaran program bantuan sosial dari pemerintah</p>
-          <a href="/layanan/bansos" class="btn btn-outline-primary btn-sm">Selengkapnya</a>
-        </div>
-      </div>
-      <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
-        <div class="text-center p-4">
-          <div class="feature-icon">
-            <i class="fa-solid fa-scale-balanced"></i>
-          </div>
-          <h4>Pengaduan</h4>
-          <p>Sampaikan pengaduan dan aspirasi untuk kemajuan desa kita</p>
-          <a href="/layanan/pengaduan" class="btn btn-outline-primary btn-sm">Selengkapnya</a>
+    <h2 class="section-title text-center mb-4">Visi & Misi Desa</h2>
+    <div class="row justify-content-center">
+      <div class="col-lg-10">
+        <div class="p-4 bg-white shadow-sm rounded">
+
+          <!-- Visi -->
+          <h4 class="fw-bold text-primary mb-2">Visi</h4>
+          <p class="fst-italic text-center mb-4" style="font-size: 1rem; line-height: 1.6;">
+            “Terwujudnya Pemerintahan Desa yang Baik dan Bersih Guna Mewujudkan Desa Kaliboja yang Adil, Makmur, Sejahtera, dan Bermasyarakat”
+          </p>
+
+          <!-- Misi -->
+          <h4 class="fw-bold text-primary mt-3 mb-2">Misi</h4>
+          <ol class="mb-0" style="font-size: 1rem; line-height: 1.7;">
+            <li>Meningkatkan kualitas pelayanan kepada masyarakat.</li>
+            <li>Menyelenggarakan pemerintahan yang bersih, terbebas dari korupsi serta bentuk-bentuk penyelewengan lainnya.</li>
+            <li>Meningkatkan partisipasi aktif dan peran serta masyarakat dalam penyelenggaraan pemerintahan, pembangunan, keagamaan, kepemudaan, dan kehidupan bermasyarakat.</li>
+            <li>Mewujudkan kehidupan masyarakat yang aman, tentram, dan tertib sehingga tercipta iklim yang kondusif.</li>
+            <li>Meningkatkan jumlah dan mutu sarana prasarana serta sumber daya yang dimiliki Pemerintah Desa Kaliboja Kecamatan Paninggaran dalam rangka mendukung tercapainya pemerintahan profesional.</li>
+          </ol>
+
         </div>
       </div>
     </div>
   </div>
 </section>
 
+
+
 <!-- Statistik -->
 <section id="statistik" class="py-5">
-  <div class="container">
-    <h2 class="section-title">Statistik Desa</h2>
-    <div class="row g-4">
+  <div class="container text-center">
+    <h2 class="section-title mb-4">Statistik Desa</h2>
+    <div class="row g-4 justify-content-center">
       <?php foreach($stats as $s): ?>
       <div class="col-6 col-md-3">
-        <div class="stat-card" data-aos="fade-up">
-          <i class="<?= esc($s['icon']) ?>"></i>
+        <div class="stat-card shadow-sm p-3 rounded" data-aos="fade-up">
+          <i class="<?= esc($s['icon']) ?> mb-2" style="font-size:2rem;"></i>
           <div class="h6 mb-1"><?= esc($s['label']) ?></div>
-          <div class="counter" data-target="<?= (int)$s['value'] ?>">0</div>
+          <div class="counter fw-bold" data-target="<?= (int)$s['value'] ?>">0</div>
         </div>
       </div>
       <?php endforeach; ?>
     </div>
-    <div class="text-center mt-4">
+    <div class="mt-4">
       <a href="/dashboard/statistik" class="btn btn-outline-primary">Lihat Detail Statistik</a>
     </div>
   </div>
 </section>
 
+
 <!-- Berita -->
 <section id="berita" class="py-5 bg-light">
   <div class="container">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <h2 class="section-title m-0">Berita Terbaru</h2>
-      <a href="/berita" class="btn btn-outline-primary btn-sm">Lihat Semua</a>
+    <div class="row align-items-center mb-4">
+      <div class="col-12 position-relative text-center">
+        <h2 class="section-title m-0">Berita Terbaru</h2>
+        <a href="/berita" class="btn btn-outline-primary btn-sm position-absolute end-0 top-50 translate-middle-y">
+          Lihat Semua
+        </a>
+      </div>
     </div>
-    <div class="row g-4">
+
+    <div class="row g-4 justify-content-center">
       <?php if(!empty($news)): foreach($news as $n): ?>
       <div class="col-md-4" data-aos="fade-up">
         <article class="card card-elev h-100">
           <div class="position-relative overflow-hidden">
             <img class="w-100" style="height:200px;object-fit:cover" loading="lazy"
-                 src="<?= $n['image'] ? '/uploads/news/'.esc($n['image']) : 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80' ?>" alt="<?= esc($n['title']) ?>">
+                 src="<?= $n['image'] ? '/uploads/news/'.esc($n['image']) : 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80' ?>" 
+                 alt="<?= esc($n['title']) ?>">
             <div class="position-absolute top-0 end-0 m-2">
               <span class="badge bg-primary"><?= esc($n['category'] ?? 'Berita') ?></span>
             </div>
           </div>
-          <div class="card-body">
+          <div class="card-body text-start">
             <h5 class="fw-bold mb-2"><?= esc($n['title']) ?></h5>
             <p class="text-muted mb-3"><?= esc(word_limiter(strip_tags($n['content']), 15)) ?></p>
             <div class="d-flex justify-content-between align-items-center">
-              <small class="text-secondary"><i class="fa-regular fa-clock me-1"></i><?= date('d M Y', strtotime($n['created_at'])) ?></small>
-              <a href="news/show"d<?= esc($n['slug'] ?? $n['id']) ?>" class="btn btn-sm btn-outline-primary">Baca Selengkapnya</a>
+              <small class="text-secondary">
+                <i class="fa-regular fa-clock me-1"></i><?= date('d M Y', strtotime($n['created_at'])) ?>
+              </small>
+              <a href="<?= site_url('news/detail/'. esc($n['id'])) ?>" class="btn btn-sm btn-outline-primary">Baca Selengkapnya</a>
             </div>
           </div>
         </article>
@@ -629,77 +631,19 @@
   </div>
 </section>
 
-<!-- Produk Unggulan -->
-<section id="produk" class="py-5">
-  <div class="container">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <h2 class="section-title m-0">Produk Unggulan</h2>
-      <div>
-        <a href="/produk" class="btn btn-outline-primary btn-sm me-2">Lihat Semua</a>
-        <a href="/dashboard/produk/tambah" class="btn btn-primary btn-sm">Tambah Produk</a>
-      </div>
-    </div>
-    <div class="row g-4">
-      <?php if(!empty($products)): foreach($products as $p): ?>
-      <div class="col-md-3" data-aos="fade-up">
-        <div class="card card-elev h-100">
-          <div class="overflow-hidden">
-            <img src="<?= $p['image'] ? '/uploads/products/'.esc($p['image']) : 'https://images.unsplash.com/photo-1603400521630-9f2de124b33b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80' ?>"
-                 class="product-thumb" alt="<?= esc($p['name']) ?>" loading="lazy">
-          </div>
-          <div class="card-body">
-            <div class="fw-bold mb-1"><?= esc($p['name']) ?></div>
-            <div class="small text-muted mb-2"><?= esc(word_limiter($p['description'], 10)) ?></div>
-            <div class="fw-bold text-success mb-2">Rp <?= number_format((float)$p['price'],0,',','.') ?></div>
-            <div class="d-flex justify-content-between align-items-center">
-              <?php if(!empty($p['contact'])): ?>
-              <a href="https://wa.me/<?= preg_replace('/\D/','',$p['contact']) ?>" target="_blank" class="btn btn-success btn-sm">
-                <i class="fa-brands fa-whatsapp me-1"></i> Pesan
-              </a>
-              <?php endif; ?>
-              <small class="text-muted"><i class="fa-solid fa-store me-1"></i> <?= esc($p['store_name'] ?? 'BUMDes Kaliboja') ?></small>
-            </div>
-          </div>
-        </div>
-      </div>
-      <?php endforeach; else: ?>
-        <div class="col-12">
-          <div class="text-center py-5">
-            <i class="fa-solid fa-cart-shopping fa-3x text-muted mb-3"></i>
-            <h5 class="text-muted">Belum ada produk unggulan</h5>
-            <a href="products/index" class="btn btn-primary mt-2">Tambah Produk</a>
-          </div>
-        </div>
-      <?php endif; ?>
-    </div>
-  </div>
-</section>
 
-<!-- Potensi -->
-<section id="potensi" class="py-5 bg-light">
-  <div class="container">
-    <h2 class="section-title">Potensi Desa</h2>
-    <div class="row g-4">
-      <?php foreach($potentials as $p): ?>
-      <div class="col-md-4" data-aos="fade-up">
-        <div class="card card-elev p-4 text-center h-100">
-          <i class="<?= esc($p['icon']) ?> fa-3x mb-3 text-primary"></i>
-          <h4 class="fw-bold"><?= esc($p['title']) ?></h4>
-          <p class="text-muted"><?= esc($p['description']) ?></p>
-          <a href="/potensi/<?= esc(url_title($p['title'])) ?>" class="btn btn-outline-primary btn-sm mt-auto">Jelajahi</a>
-        </div>
-      </div>
-      <?php endforeach; ?>
-    </div>
-  </div>
-</section>
 <!-- Wisata -->
 <section id="wisata" class="py-5">
   <div class="container">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <h2 class="section-title m-0">Wisata Desa</h2>
-      <!-- tombol lihat semua langsung ke route /wisata -->
-      <a href="<?= base_url('wisata') ?>" class="btn btn-outline-primary btn-sm">Lihat Semua</a>
+    <div class="row align-items-center mb-4">
+      <div class="col-12 position-relative text-center">
+        <h2 class="section-title m-0">Wisata Desa</h2>
+        <!-- tombol lihat semua langsung ke route /wisata -->
+        <a href="<?= base_url('wisata') ?>" 
+           class="btn btn-outline-primary btn-sm position-absolute end-0 top-50 translate-middle-y">
+          Lihat Semua
+        </a>
+      </div>
     </div>
 
     <div class="row g-4">
@@ -710,9 +654,10 @@
               <img src="<?= $w['gambar'] 
                 ? base_url('uploads/wisata/' . esc($w['gambar'])) 
                 : 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=400&q=80' ?>"
-                class="product-thumb" 
+                class="product-thumb w-100" 
                 alt="<?= esc($w['nama']) ?>" 
-                loading="lazy">
+                loading="lazy"
+                style="height:200px;object-fit:cover;">
             </div>
             <div class="card-body">
               <h5 class="fw-bold mb-2"><?= esc($w['nama']) ?></h5>
@@ -769,13 +714,16 @@
 <!-- Agenda -->
 <section id="agenda" class="py-5 bg-light">
   <div class="container">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <h2 class="section-title m-0">Agenda Kegiatan</h2>
-      <div>
-        <a href="/agenda" class="btn btn-outline-primary btn-sm me-2">Lihat Semua</a>
-        <a href="/dashboard/agenda/tambah" class="btn btn-primary btn-sm">Tambah Agenda</a>
+    <div class="row align-items-center mb-4">
+      <div class="col-12 position-relative text-center">
+        <h2 class="section-title m-0">Agenda Kegiatan</h2>
+        <div class="position-absolute end-0 top-50 translate-middle-y">
+          <a href="/agenda" class="btn btn-outline-primary btn-sm me-2">Lihat Semua</a>
+          <a href="/dashboard/agenda/tambah" class="btn btn-primary btn-sm">Tambah Agenda</a>
+        </div>
       </div>
     </div>
+
     <div class="row">
       <div class="col-lg-8 mx-auto">
         <?php if(!empty($events)): foreach($events as $e): ?>
@@ -810,45 +758,116 @@
 </section>
 
 <!-- Aparatur -->
-<section id="aparatur" class="py-5">
+<style>
+  /* Warna biru keabu-abuan */
+  .text-desa {
+    color: #4E6E6E !important;
+  }
+  .bg-desa {
+    background-color: #4E6E6E !important;
+    color: #fff !important;
+  }
+  /* Kotakan seragam */
+  .box-desa {
+    border: 2px solid #4E6E6E;   /* warna tepi */
+    border-radius: 10px;         /* sudut melengkung */
+    padding: 15px;               /* jarak dalam */
+    background-color: #fff;      /* latar putih biar rapi */
+  }
+</style>
+
+<section id="aparatur" class="py-5 bg-light">
   <div class="container">
-    <h2 class="section-title">Aparatur Desa</h2>
-    <div class="row g-4 justify-content-center">
-      <?php if(!empty($officials)): foreach($officials as $o): ?>
-      <div class="col-6 col-md-3 text-center official-item" data-aos="fade-up">
-        <img src="<?= esc($o['photo'] ?: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80') ?>" class="official-avatar mb-3" alt="<?= esc($o['name']) ?>">
-        <div class="fw-bold"><?= esc($o['name']) ?></div>
-        <div class="small text-muted mb-2"><?= esc($o['position']) ?></div>
-        <div class="d-flex justify-content-center">
-          <a href="#" class="text-primary me-2"><i class="fa-brands fa-whatsapp"></i></a>
-          <a href="#" class="text-primary me-2"><i class="fa-regular fa-envelope"></i></a>
-          <a href="#" class="text-primary"><i class="fa-regular fa-user"></i></a>
+    <h2 class="section-title text-center mb-5 text-desa">
+      <div class="d-flex justify-content-between align-items-center mb-3"></div>
+      Struktur Pemerintah Desa Kaliboja
+    </h2>
+
+    <!-- Kepala Desa -->
+    <div class="text-center mb-5">
+      <div class="box-desa d-inline-block shadow">
+        <h4 class="fw-bold mb-0 text-desa">Kepala Desa</h4>
+      </div>
+    </div>
+
+    <!-- Sekretaris + Kasi Pemerintahan -->
+    <div class="row justify-content-center mb-4">
+      <div class="col-md-4 mb-3">
+        <div class="box-desa h-100 text-center shadow-sm">
+          <h5 class="fw-bold text-desa">Sekretaris Desa</h5>
         </div>
       </div>
-      <?php endforeach; else: ?>
-        <div class="col-12">
-  <div class="text-center py-5">
-    <i class="fa-solid fa-users fa-3x text-muted mb-3"></i>
-    <h5 class="text-muted">Data aparatur belum tersedia</h5>
-    <a href="/dashboard/aparatur/tambah" class="btn btn-primary mt-2">Tambah Data Aparatur</a>
+      <div class="col-md-4 mb-3">
+        <div class="box-desa h-100 text-center shadow-sm">
+          <h5 class="fw-bold text-desa">Kasi Pemerintahan</h5>
+        </div>
+      </div>
+    </div>
+
+    <!-- Kasi lainnya + Kaur -->
+    <div class="row justify-content-center mb-4">
+      <div class="col-md-3 mb-3">
+        <div class="box-desa h-100 text-center shadow-sm">
+          <h6 class="fw-bold text-desa">Kasi Kesra & Pelayanan</h6>
+        </div>
+      </div>
+      <div class="col-md-3 mb-3">
+        <div class="box-desa h-100 text-center shadow-sm">
+          <h6 class="fw-bold text-desa">Kaur Umum & Perencanaan</h6>
+        </div>
+      </div>
+      <div class="col-md-3 mb-3">
+        <div class="box-desa h-100 text-center shadow-sm">
+          <h6 class="fw-bold text-desa">Kaur Keuangan</h6>
+        </div>
+      </div>
+    </div>
+
+    <!-- Kepala Dusun -->
+    <h4 class="fw-bold text-center mt-5 mb-3 text-desa">Kepala Dusun</h4>
+    <div class="row text-center">
+      <div class="col-md-3 mb-3">
+        <div class="box-desa shadow-sm">
+          <strong>Kadus Samboja Timur</strong>
+        </div>
+      </div>
+      <div class="col-md-3 mb-3">
+        <div class="box-desa shadow-sm">
+          <strong>Kadus Samboja Barat</strong>
+        </div>
+      </div>
+      <div class="col-md-3 mb-3">
+        <div class="box-desa shadow-sm">
+          <strong>Kadus Kaligenteng</strong>
+        </div>
+      </div>
+      <div class="col-md-3 mb-3">
+        <div class="box-desa shadow-sm">
+          <strong>Kadus Silemud</strong>
+        </div>
+      </div>
+    </div>
   </div>
-</div>
-<?php endif; ?>
-</div>
-</div>
 </section>
+
 
 <!-- Galeri -->
 <section id="galeri" class="py-5 bg-light">
   <div class="container">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <h2 class="section-title m-0">Galeri Desa</h2>
-      <a href="/galeri" class="btn btn-outline-primary btn-sm">Lihat Semua</a>
+    <div class="row align-items-center mb-4">
+      <div class="col-12 position-relative text-center">
+        <h2 class="section-title m-0">Galeri Desa</h2>
+        <a href="<?= base_url('galeri') ?>" 
+           class="btn btn-outline-primary btn-sm position-absolute end-0 top-50 translate-middle-y">
+          Lihat Semua
+        </a>
+      </div>
     </div>
+
     <div class="row g-3">
       <div class="col-md-4" data-aos="fade-up">
         <div class="gallery-item">
-          <img src="https://images.unsplash.com/photo-1516387938699-a93567ec168e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Kegiatan Desa">
+          <img src="https://images.unsplash.com/photo-1516387938699-a93567ec168e?auto=format&fit=crop&w=400&q=80" alt="Kegiatan Desa">
           <div class="gallery-overlay">
             <h6 class="mb-0">Kegiatan Desa</h6>
             <small>Kerja bakti bulanan</small>
@@ -857,7 +876,7 @@
       </div>
       <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
         <div class="gallery-item">
-          <img src="https://images.unsplash.com/photo-1586773860418-d37222d8fce3?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Panen Raya">
+          <img src="https://images.unsplash.com/photo-1586773860418-d37222d8fce3?auto=format&fit=crop&w=400&q=80" alt="Panen Raya">
           <div class="gallery-overlay">
             <h6 class="mb-0">Panen Raya</h6>
             <small>Hasil pertanian desa</small>
@@ -866,7 +885,7 @@
       </div>
       <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
         <div class="gallery-item">
-          <img src="https://images.unsplash.com/photo-1591822059941-5d9732490a92?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Pemandangan Desa">
+          <img src="https://images.unsplash.com/photo-1591822059941-5d9732490a92?auto=format&fit=crop&w=400&q=80" alt="Pemandangan Desa">
           <div class="gallery-overlay">
             <h6 class="mb-0">Pemandangan Desa</h6>
             <small>Keindahan alam Kaliboja</small>
@@ -876,6 +895,7 @@
     </div>
   </div>
 </section>
+
 
 <!-- Peta -->
 <section class="container-fluid p-0">

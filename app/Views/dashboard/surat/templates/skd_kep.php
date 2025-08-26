@@ -37,7 +37,7 @@
                 <h3>PEMERINTAH KABUPATEN PEKALONGAN</h3>
                 <h4>KECAMATAN PANINGGARAN</h4>
                 <h4>DESA KALIBOJA</h4>
-                <p>Alamat: Jl. Raya Kaliboja, Paninggaran | Kode Pos: 51164</p>
+                <p>Alamat: Desa Kaliboja Kec. Paninggaran Kab. Pekalongan 51164</p>
             </div>
         </div>
 

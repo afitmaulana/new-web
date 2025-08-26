@@ -6,34 +6,43 @@ use App\Models\NewsModel;
 
 class PublicNews extends BaseController
 {
-    // Halaman untuk menampilkan semua berita (arsip)
-    public function index()
+    protected $newsModel;
+
+    public function __construct()
     {
-        $newsModel = new NewsModel();
-        $data = [
-            'title' => 'Arsip Berita',
-            'news'  => $newsModel->orderBy('created_at', 'DESC')->paginate(8), // 8 berita per halaman
-            'pager' => $newsModel->pager,
-        ];
-        // Anda perlu membuat view untuk ini: app/Views/news_archive.php
-        return view('news_archive', $data);
+        // Pastikan Anda memanggil model yang benar
+        $this->newsModel = new NewsModel();
     }
 
-    // Halaman untuk menampilkan satu berita
+    public function index()
+    {
+        // ... (kode untuk daftar berita, jika ada)
+    }
+
     public function detail($id)
     {
-        $newsModel = new NewsModel();
-        $newsItem = $newsModel->find($id);
+        // 1. Ambil data berita utama terlebih dahulu
+        $news = $this->newsModel->find($id);
 
-        if (empty($newsItem)) {
-            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        if (!$news) {
+            // Tampilkan halaman 404 jika berita tidak ditemukan
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("Berita tidak ditemukan.");
         }
 
+        // 2. Ambil SEMUA gambar yang terkait dengan berita ini dari tabel news_images
+        $db = \Config\Database::connect();
+        $images = $db->table('news_images')
+                       ->where('news_id', $id)
+                       ->get()
+                       ->getResultArray(); // Mengambil semua hasil sebagai array
+
+        // 3. Kirim data berita dan semua gambarnya ke view
         $data = [
-            'title' => $newsItem['title'],
-            'news'  => $newsItem,
+            'title'  => $news['title'],
+            'news'   => $news,
+            'images' => $images, // Ini adalah array yang berisi semua gambar
         ];
-        // Anda perlu membuat view untuk ini: app/Views/news_detail.php
-        return view('news_detail', $data);
+
+        return view('pages/detail_berita', $data);
     }
 }

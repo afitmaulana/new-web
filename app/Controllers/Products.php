@@ -14,7 +14,25 @@ class Products extends BaseController
         $this->productModel = new ProductModel();
     }
 
-    // List semua produk
+    // =====================================================================
+    // FUNGSI UNTUK HALAMAN PUBLIK
+    // =====================================================================
+
+    public function publicIndex()
+    {
+        helper('text');
+
+        $data = [
+            'title'    => 'Produk Desa',
+            'products' => $this->productModel->orderBy('created_at', 'DESC')->findAll()
+        ];
+        return view('pages/products', $data);
+    }
+
+    // =====================================================================
+    // FUNGSI UNTUK DASHBOARD
+    // =====================================================================
+
     public function index()
     {
         $data = [
@@ -24,13 +42,11 @@ class Products extends BaseController
         return view('dashboard/products/index', $data);
     }
 
-    // Form tambah
     public function create()
     {
         return view('dashboard/products/create', ['title' => 'Tambah Produk']);
     }
 
-    // Simpan produk
     public function store()
     {
         $file = $this->request->getFile('image');
@@ -52,10 +68,10 @@ class Products extends BaseController
             'updated_at'  => date('Y-m-d H:i:s'),
         ]);
 
-        return redirect()->to('products')->with('success', 'Produk berhasil ditambahkan');
+        // DIUBAH: Mengarahkan kembali ke halaman dashboard produk
+        return redirect()->to('dashboard/products')->with('success', 'Produk berhasil ditambahkan');
     }
 
-    // Edit produk
     public function edit($id)
     {
         $product = $this->productModel->find($id);
@@ -68,7 +84,6 @@ class Products extends BaseController
         ]);
     }
 
-    // Update produk
     public function update($id)
     {
         $product = $this->productModel->find($id);
@@ -94,13 +109,14 @@ class Products extends BaseController
             'updated_at'  => date('Y-m-d H:i:s'),
         ]);
 
-        return redirect()->to('products')->with('success', 'Produk berhasil diperbarui');
+        // DIUBAH: Mengarahkan kembali ke halaman dashboard produk
+        return redirect()->to('dashboard/products')->with('success', 'Produk berhasil diperbarui');
     }
 
-    // Hapus produk
     public function delete($id)
     {
         $this->productModel->delete($id);
-        return redirect()->to('products')->with('success', 'Produk berhasil dihapus');
+        // DIUBAH: Mengarahkan kembali ke halaman dashboard produk
+        return redirect()->to('dashboard/products')->with('success', 'Produk berhasil dihapus');
     }
 }

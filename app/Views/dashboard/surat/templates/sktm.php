@@ -6,7 +6,7 @@
     <style>
         body { font-family: 'Times New Roman', Times, serif; font-size: 12pt; margin: 30px; }
         .container { width: 100%; margin: auto; }
-        .kop-table { width: 100%; border-bottom: 3px solid black; padding-bottom: 10px; margin-bottom: 30px;}
+        .kop-table { width: 100%; border-bottom: 3px solid black; padding-bottom: 10px; margin-bottom: 20px;}
         .kop-table td { text-align: center; vertical-align: middle; }
         .logo { width: 90px; }
         .kop-text h3, .kop-text h4, .kop-text p { margin: 0; }
@@ -17,9 +17,10 @@
         .judul-surat h4 { text-decoration: underline; margin: 0; }
         .isi-surat { line-height: 1.8; text-align: justify; }
         .isi-surat .indent { text-indent: 50px; }
-        .data-pemohon { padding-left: 50px; }
-        .penutup { margin-top: 40px; }
-        .tanda-tangan { margin-top: 80px; width: 300px; float: right; text-align: center; }
+        .data-pemohon { margin: 20px 0 20px 50px; }
+        .data-pemohon td { padding: 2px 5px; vertical-align: top; }
+        .penutup { margin-top: 20px; }
+        .tanda-tangan { margin-top: 60px; width: 300px; float: right; text-align: center; }
     </style>
 </head>
 <body>
@@ -33,7 +34,7 @@
                     <h3>PEMERINTAH KABUPATEN PEKALONGAN</h3>
                     <h4>KECAMATAN PANINGGARAN</h4>
                     <h4>DESA KALIBOJA</h4>
-                    <p>Alamat: Jl. Raya Kaliboja, Paninggaran | Kode Pos: 51164</p>
+                    <p>Alamat : Desa Kaliboja Kec. Paninggaran Kab. Pekalongan 51164</p>
                 </td>
             </tr>
         </table>
@@ -44,14 +45,21 @@
         </div>
 
         <div class="isi-surat">
-            <p class="indent">Yang bertanda tangan di bawah ini Kepala Desa Kaliboja, Kecamatan Paninggaran, Kabupaten Pekalongan, dengan ini menerangkan bahwa:</p>
+            <p class="indent">Yang bertanda tangan di bawah ini Kepala Desa Kaliboja, Kecamatan Paninggaran, Kabupaten Pekalongan, menerangkan dengan sebenarnya bahwa:</p>
             <table class="data-pemohon">
-                <tr><td width="150px">NIK</td><td>:</td><td><b><?= esc($data_pemohon->nik_pemohon) ?></b></td></tr>
-                <tr><td>Nama Orang Tua/Wali</td><td>:</td><td><?= esc($data_pemohon->nama_orang_tua) ?></td></tr>
+                <tr><td width="200px">Nama</td><td>:</td><td><b><?= esc($data_pemohon->nama_pemohon ?? '-') ?></b></td></tr>
+                <tr><td>No. KK</td><td>:</td><td><?= esc($data_pemohon->no_kk ?? '-') ?></td></tr>
+                <tr><td>NIK</td><td>:</td><td><?= esc($data_pemohon->nik_pemohon ?? '-') ?></td></tr>
+                <tr><td>Tempat, Tgl Lahir</td><td>:</td><td><?= esc($data_pemohon->ttl ?? '-') ?></td></tr>
+                <tr><td>Alamat</td><td>:</td><td><?= esc($data_pemohon->alamat ?? '-') ?></td></tr>
+                <tr><td>Agama</td><td>:</td><td><?= esc($data_pemohon->agama ?? '-') ?></td></tr>
+                <tr><td>Pekerjaan</td><td>:</td><td><?= esc($data_pemohon->pekerjaan ?? '-') ?></td></tr>
+                <tr><td>Keperluan</td><td>:</td><td><?= esc($data_pemohon->keperluan ?? '-') ?></td></tr>
             </table>
-            <p class="indent">Adalah benar penduduk Desa Kaliboja dan berdasarkan data serta pengamatan kami, yang bersangkutan tergolong dalam keluarga tidak mampu.</p>
-            <p class="indent">Surat keterangan ini dibuat untuk keperluan: <b><?= esc($data_pemohon->keperluan) ?></b>.</p>
-            <p class="penutup indent">Demikian Surat Keterangan ini dibuat untuk dapat dipergunakan sebagaimana mestinya.</p>
+
+            <p class="indent">Orang tersebut benar-benar warga kami dan tergolong keluarga tidak mampu.</p>
+            <p class="indent">Sehubungan dengan maksud yang bersangkutan, diminta agar instansi yang berkepentingan dapat memberikan bantuan, pelayanan, serta fasilitas seperlunya.</p>
+            <p class="penutup indent">Demikian surat keterangan ini dibuat dengan sebenarnya dan dapat dipergunakan seperlunya.</p>
         </div>
 
         <div class="tanda-tangan">

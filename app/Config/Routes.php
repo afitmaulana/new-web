@@ -8,6 +8,7 @@ use CodeIgniter\Router\RouteCollection;
 // RUTE PUBLIK (HALAMAN DEPAN)
 // =====================================================================
 $routes->get('/', 'Home::index');
+ $routes->get('statistik', 'Dashboard::statistik');
 
 $routes->group('news', static function ($routes) {
     $routes->get('/', 'PublicNews::index');
@@ -19,6 +20,10 @@ $routes->get('absensi', 'Absensi::index');
 
 $routes->get('profile', 'ProfileController::index');
 
+
+// app/Config/Routes.php
+// app/Config/Routes.php
+$routes->get('/produk', 'Products::publicIndex');
 // =====================================================================
 // RUTE AUTENTIKASI
 // =====================================================================
